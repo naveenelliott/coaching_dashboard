@@ -3,6 +3,12 @@ import Papa from 'papaparse';
 import CoachScatterPlot from './CoachScatterPlot';
 import PlayerJumpTable from './PlayerJumpTable';
 import './App.css';
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+} from 'react-router-dom';
+import CoachPage from './CoachPage'; // create this next
 
 function App() {
   const [rawData, setRawData] = useState([]);

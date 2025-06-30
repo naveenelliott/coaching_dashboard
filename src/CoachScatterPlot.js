@@ -84,6 +84,12 @@ function CoachScatterPlot({ data, xField = 'NBA_Entrants', yField = 'Avg_Prob_Ch
           display: true,
           text: xLabel,
         },
+        ticks: {
+          callback: function (value) {
+            // Only show integer ticks
+            return Number.isInteger(value) ? value : null;
+          },
+        },
         grid: {
           display: false,
         },
