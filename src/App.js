@@ -3,12 +3,8 @@ import Papa from 'papaparse';
 import CoachScatterPlot from './CoachScatterPlot';
 import PlayerJumpTable from './PlayerJumpTable';
 import './App.css';
-import {
-  BrowserRouter as Router,
-  Routes,
-  Route,
-} from 'react-router-dom';
-import CoachPage from './CoachPage'; // create this next
+import { Routes, Route } from 'react-router-dom';
+import CoachPage from './CoachPage';
 
 function App() {
   const [rawData, setRawData] = useState([]);
@@ -55,6 +51,7 @@ function App() {
     const coachStats = {};
     filtered.forEach((row) => {
       const coach = row.Coach;
+      const coachID = row.Coach_ID;
       const nbaProb = parseFloat(row.NBA_Probability) || 0;
       const transferChange = parseFloat(row.Transfer_Prob_Change) || 0;
       const actualNBA = parseInt(row.Actual_NBA) || 0;
@@ -63,6 +60,7 @@ function App() {
       if (!coachStats[coach]) {
         coachStats[coach] = {
           Coach: coach,
+          coachID,
           oneYearProbs: [],
           multiYearProbs: [],
           transferChanges: [],
@@ -96,6 +94,7 @@ function App() {
 
         return {
           Coach: coach.Coach,
+          coachID: coach.coachID,
           Avg_NBA_Prob_OneYear: avgOneYear,
           Avg_NBA_Prob_MultiYear: avgMultiYear,
           Avg_Transfer_Prob_Change: avgTransfer,
@@ -132,93 +131,99 @@ function App() {
     .slice(0, 50);
 
   return (
-    <div className="App">
-  `  <h2>Coach Development Metrics</h2>
+    <Routes>
+      <Route path="/" element={
+        <div className="App">
+          <h2>Coach Development Metrics</h2>
 
-    <div className="filters-container">
-      <div className="filter-box">
-        <label>Season:</label>
-        <select value={selectedSeason} onChange={e => setSelectedSeason(e.target.value)}>
-          {seasonOptions.map(season => (
-            <option key={season} value={season}>{season}</option>
-          ))}
-        </select>
-      </div>
-      <div className="filter-box">
-        <label>Conference Level:</label>
-        <select value={conferenceFilter} onChange={e => setConferenceFilter(e.target.value)}>
-          <option value="P5">P5</option>
-          <option value="Other">Other</option>
-        </select>
-      </div>
-      <div className="filter-box">
-        <label>Player Type:</label>
-        <select value={playerType} onChange={e => setPlayerType(e.target.value)}>
-          <option value="oneYears">One-Year Players</option>
-          <option value="multiYears">Multi-Year Players</option>
-        </select>
-      </div>
-      <div className="filter-box">
-        <label>Min Transfer Prob Change:</label>
-        <input type="number" step="0.01" value={minTransferChange} onChange={e => setMinTransferChange(parseFloat(e.target.value) || 0)} />
-      </div>
-      <div className="filter-box">
-        <label>Min NBA Entrants:</label>
-        <input type="number" value={minNBAEntrants} onChange={e => setMinNBAEntrants(parseInt(e.target.value) || 0)} />
-      </div>
-      <div className="filter-box">
-        <label>Highlight Coach:</label>
-        <input
-          list="coach-list"
-          type="text"
-          value={highlightCoach}
-          onChange={(e) => setHighlightCoach(e.target.value)}
-          placeholder="Start typing coach name"
-        />
-        <datalist id="coach-list">
-          {Array.from(new Set(rawData.map(row => row.Coach)))
-            .sort()
-            .map((coach, i) => (
-              <option key={i} value={coach} />
-            ))}
-        </datalist>
-      </div>
-    </div>
-
-    <div className="visualizations">
-      <div>
-        <CoachScatterPlot
-          data={filteredData}
-          xField="NBA_Entrants"
-          yField={playerType === 'oneYears' ? 'Avg_NBA_Prob_OneYear' : 'Avg_NBA_Prob_MultiYear'}
-          xLabel="# of NBA Entrants"
-          yLabel="Avg NBA Probability Change"
-          title="NBA Development by Coach"
-          highlightCoach={highlightCoach}
-        />
-        {conferenceFilter === 'Other' && (
-          <div style={{ marginTop: '2rem' }}>
-            <CoachScatterPlot
-              data={filteredData}
-              xField="Transfer_Entrants"
-              yField="Avg_Transfer_Prob_Change"
-              xLabel="# of Players Transferred to P5"
-              yLabel="Avg Transfer-to-P5 Probability"
-              title="Transfers to P5 by Coach"
-              highlightCoach={highlightCoach}
-            />
+          <div className="filters-container">
+            <div className="filter-box">
+              <label>Season:</label>
+              <select value={selectedSeason} onChange={e => setSelectedSeason(e.target.value)}>
+                {seasonOptions.map(season => (
+                  <option key={season} value={season}>{season}</option>
+                ))}
+              </select>
+            </div>
+            <div className="filter-box">
+              <label>Conference Level:</label>
+              <select value={conferenceFilter} onChange={e => setConferenceFilter(e.target.value)}>
+                <option value="P5">P5</option>
+                <option value="Other">Other</option>
+              </select>
+            </div>
+            <div className="filter-box">
+              <label>Player Type:</label>
+              <select value={playerType} onChange={e => setPlayerType(e.target.value)}>
+                <option value="oneYears">One-Year Players</option>
+                <option value="multiYears">Multi-Year Players</option>
+              </select>
+            </div>
+            <div className="filter-box">
+              <label>Min Transfer Prob Change:</label>
+              <input type="number" step="0.01" value={minTransferChange} onChange={e => setMinTransferChange(parseFloat(e.target.value) || 0)} />
+            </div>
+            <div className="filter-box">
+              <label>Min NBA Entrants:</label>
+              <input type="number" value={minNBAEntrants} onChange={e => setMinNBAEntrants(parseInt(e.target.value) || 0)} />
+            </div>
+            <div className="filter-box">
+              <label>Highlight Coach:</label>
+              <input
+                list="coach-list"
+                type="text"
+                value={highlightCoach}
+                onChange={(e) => setHighlightCoach(e.target.value)}
+                placeholder="Start typing coach name"
+              />
+              <datalist id="coach-list">
+                {Array.from(new Set(rawData.map(row => row.Coach)))
+                  .sort()
+                  .map((coach, i) => (
+                    <option key={i} value={coach} />
+                  ))}
+              </datalist>
+            </div>
           </div>
-        )}
-      </div>
 
-      <div>
-        <h3 style={{ marginTop: 0, marginBottom: '1rem' }}>
-          Top Player Jumps ({conferenceFilter === 'P5' ? 'NBA Probability' : 'Transfer to P5'})
-        </h3>
-        <PlayerJumpTable topJumps={topJumps} conferenceFilter={conferenceFilter} />
-      </div>
-    </div>
-  </div>
+          <div className="visualizations">
+            <div>
+              <CoachScatterPlot
+                data={filteredData}
+                xField="NBA_Entrants"
+                yField={playerType === 'oneYears' ? 'Avg_NBA_Prob_OneYear' : 'Avg_NBA_Prob_MultiYear'}
+                xLabel="# of NBA Entrants"
+                yLabel="Avg NBA Probability Change"
+                title="NBA Development by Coach"
+                highlightCoach={highlightCoach}
+              />
+              {conferenceFilter === 'Other' && (
+                <div style={{ marginTop: '2rem' }}>
+                  <CoachScatterPlot
+                    data={filteredData}
+                    xField="Transfer_Entrants"
+                    yField="Avg_Transfer_Prob_Change"
+                    xLabel="# of Players Transferred to P5"
+                    yLabel="Avg Transfer-to-P5 Probability"
+                    title="Transfers to P5 by Coach"
+                    highlightCoach={highlightCoach}
+                  />
+                </div>
+              )}
+            </div>
+
+            <div>
+              <h3 style={{ marginTop: 0, marginBottom: '1rem' }}>
+                Top Player Jumps ({conferenceFilter === 'P5' ? 'NBA Probability' : 'Transfer to P5'})
+              </h3>
+              <PlayerJumpTable topJumps={topJumps} conferenceFilter={conferenceFilter} />
+            </div>
+          </div>
+        </div>
+      }
+      />
+      <Route path="/coach/:coachID" element={<CoachPage rawData={rawData} />} />
+    </Routes>
   );
 }
 

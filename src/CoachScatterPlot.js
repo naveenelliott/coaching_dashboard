@@ -1,4 +1,5 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Scatter } from 'react-chartjs-2';
 import {
   Chart as ChartJS,
@@ -12,7 +13,17 @@ import annotationPlugin from 'chartjs-plugin-annotation';
 
 ChartJS.register(PointElement, LinearScale, Title, Tooltip, Legend, annotationPlugin);
 
-function CoachScatterPlot({ data, xField = 'NBA_Entrants', yField = 'Avg_Prob_Change', xLabel, yLabel, title, highlightCoach }) {
+function CoachScatterPlot({
+  data,
+  xField = 'NBA_Entrants',
+  yField = 'Avg_Prob_Change',
+  xLabel,
+  yLabel,
+  title,
+  highlightCoach,
+}) {
+  const navigate = useNavigate();
+
   if (data.length === 0) return <p>No data available.</p>;
 
   const avgX = data.reduce((sum, d) => sum + (d[xField] || 0), 0) / data.length;
@@ -26,6 +37,7 @@ function CoachScatterPlot({ data, xField = 'NBA_Entrants', yField = 'Avg_Prob_Ch
           x: c[xField],
           y: c[yField],
           coach: c.Coach,
+          coachID: c.coachID, // Add coachID here
         })),
         backgroundColor: data.map(c =>
           highlightCoach && c.Coach.toLowerCase().includes(highlightCoach.toLowerCase())
@@ -43,6 +55,18 @@ function CoachScatterPlot({ data, xField = 'NBA_Entrants', yField = 'Avg_Prob_Ch
 
   const options = {
     responsive: true,
+    onClick: (e, elements) => {
+      if (elements.length > 0) {
+        const index = elements[0].index;
+        const coach = chartData.datasets[0].data[index];
+        console.log('Clicked coach point:', coach); // ✅ Check if coachID exists
+        if (coach.coachID) {
+          navigate(`/coach/${coach.coachID}`);
+        } else {
+          alert('Missing coachID!');
+        }
+      }
+    },
     plugins: {
       tooltip: {
         callbacks: {
@@ -66,14 +90,14 @@ function CoachScatterPlot({ data, xField = 'NBA_Entrants', yField = 'Avg_Prob_Ch
             xMin: avgX,
             xMax: avgX,
             borderColor: 'black',
-            borderWidth: 2
+            borderWidth: 2,
           },
           yLine: {
             type: 'line',
             yMin: avgY,
             yMax: avgY,
             borderColor: 'black',
-            borderWidth: 2
+            borderWidth: 2,
           },
         },
       },
@@ -86,7 +110,6 @@ function CoachScatterPlot({ data, xField = 'NBA_Entrants', yField = 'Avg_Prob_Ch
         },
         ticks: {
           callback: function (value) {
-            // Only show integer ticks
             return Number.isInteger(value) ? value : null;
           },
         },
