@@ -1,10 +1,26 @@
-import React from 'react';
 import { useParams, Link } from 'react-router-dom';
+import CoachRadarChart from './CoachRadarChart';
+import Papa from 'papaparse';
+import React, { useEffect, useState } from 'react';
+
 
 const CoachPage = ({ rawData }) => {
   const { coachID } = useParams();
+  const [percentileData, setPercentileData] = useState([]);
+
+  useEffect(() => {
+    Papa.parse('/coach_percentile_rank_data.csv', {
+      download: true,
+      header: true,
+      dynamicTyping: true,
+      complete: (results) => {
+        setPercentileData(results.data);
+      },
+    });
+  }, []);
 
   const coachData = rawData.filter(row => row.Coach_ID === coachID);
+  const radarRow = percentileData.find(row => row.Coach_ID === coachID);
 
   if (coachData.length === 0) {
     return (
@@ -30,6 +46,8 @@ const CoachPage = ({ rawData }) => {
 
   // Get current conference level from most recent row
   const conferenceLevel = recentTeamRow?.conference_level || 'Other';
+
+  const conference = recentTeamRow?.conference || 'Other';
 
   // NBA players (P5) or D1 transfers (Other)
   const notablePlayers = coachData.filter(row =>
@@ -68,23 +86,24 @@ const CoachPage = ({ rawData }) => {
             />
             <div>
               <h2 style={{ margin: 0 }}>{coachName}</h2>
-              <h3 style={{ margin: '0.5rem 0 0 0' }}><strong>School:</strong> {schoolName}</h3>
+              <h4 style={{ margin: '0.5rem 0 0 0' }}><strong>School:</strong> {schoolName}</h4>
             </div>
 
             <div style={{ marginLeft: 'auto' }}>
-              <p style={{ margin: 0 }}>
+              <h3 style={{ margin: 5 }}>
                 <strong>
                   {conferenceLevel === 'P5'
-                    ? 'Avg NBA Probability:'
-                    : 'Avg D1 Transfer Probability:'}
+                    ? 'Average Probability of Making it to the NBA:'
+                    : 'Average Probability of Transferring to P5 Team:'}
                 </strong>{' '}
                 {(avgProbability * 100).toFixed(2)}%
-              </p>
+              </h3>
             </div>
           </div>
 
 
           <div style={{ marginTop: '1.5rem' }}>
+            <p style={{ marginTop: '0.25rem' }}><strong>Conference:</strong> {conference}</p>
             <p style={{ marginTop: '0.25rem' }}><strong>Players who made the NBA:</strong> {nbaPlayers}</p>
             <strong>{conferenceLevel === 'P5' ? 'Players Sent to NBA' : 'Players Transferred to D1'}</strong>
             {playerNames.length === 0 ? (
@@ -99,6 +118,12 @@ const CoachPage = ({ rawData }) => {
           </div>
         </div>
       </div>
+
+      {radarRow && (
+        <div style={{ marginTop: '2rem' }}>
+          <CoachRadarChart coachRow={radarRow} />
+        </div>
+      )}
 
       <div style={{ marginTop: '2rem' }}>
         <Link to="/">← Back to Dashboard</Link>
