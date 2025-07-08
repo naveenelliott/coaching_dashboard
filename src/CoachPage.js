@@ -63,6 +63,13 @@ const CoachPage = ({ rawData }) => {
 
   let avgProbability = 0;
 
+  const notablePlayersDev = coachData.filter(row =>
+    parseFloat(row.NBA_Prob_Change || 0) >= 0.2 || parseInt(row.eventually_NBA || 0) === 1
+  );
+
+  const playerNames2 = [...new Set(notablePlayersDev.map(row => row.Name))];
+
+
   if (conferenceLevel === 'P5') {
     const relevant = coachData.filter(row => !isNaN(row.NBA_Probability));
     const total = relevant.reduce((sum, row) => sum + parseFloat(row.NBA_Probability || 0), 0);
@@ -116,6 +123,16 @@ const CoachPage = ({ rawData }) => {
               </ul>
             )}
           </div>
+          <strong>Notable Players Developed</strong>
+              {playerNames2.length === 0 ? (
+                <p style={{ margin: '0.5rem 0' }}>No players listed.</p>
+              ) : (
+                <ul style={{ paddingLeft: 0, listStyle: 'none', marginTop: '0.5rem' }}>
+                  {playerNames2.map((name, index) => (
+                    <li key={index}>{name}</li>
+                  ))}
+                </ul>
+              )}
         </div>
       </div>
 

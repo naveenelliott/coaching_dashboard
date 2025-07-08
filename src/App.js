@@ -130,6 +130,10 @@ function App() {
     })
     .slice(0, 50);
 
+    const uniqueJumps = Array.from(
+        new Map(topJumps.map(row => [row.Name, row])).values()
+    );
+
   return (
     <Routes>
       <Route path="/" element={
@@ -216,7 +220,9 @@ function App() {
               <h3 style={{ marginTop: 0, marginBottom: '1rem' }}>
                 Top Player Jumps ({conferenceFilter === 'P5' ? 'NBA Probability' : 'Transfer to P5'})
               </h3>
-              <PlayerJumpTable topJumps={topJumps} conferenceFilter={conferenceFilter} />
+
+
+              <PlayerJumpTable topJumps={uniqueJumps} conferenceFilter={conferenceFilter} />
             </div>
           </div>
         </div>

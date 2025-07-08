@@ -1,6 +1,9 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 
 function PlayerJumpTable({ topJumps, conferenceFilter }) {
+  const navigate = useNavigate();
+
   return (
     <div style={{ maxHeight: '400px', overflowY: 'scroll', marginTop: '2rem' }}>
       <table style={{ width: '100%', borderCollapse: 'collapse' }}>
@@ -14,7 +17,11 @@ function PlayerJumpTable({ topJumps, conferenceFilter }) {
         </thead>
         <tbody>
           {topJumps.map((row, index) => (
-            <tr key={index} style={{ borderBottom: '1px solid #ccc' }}>
+            <tr
+              key={index}
+              style={{ borderBottom: '1px solid #ccc', cursor: 'pointer' }}
+              onClick={() => navigate(`/coach/${row.Coach_ID}`)}
+            >
               <td style={tdStyle}>
                 {row.Name}
                 {parseInt(row.eventually_NBA) === 1 && (
