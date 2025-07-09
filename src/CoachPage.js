@@ -22,6 +22,8 @@ const CoachPage = ({ rawData }) => {
   const coachData = rawData.filter(row => row.Coach_ID === coachID);
   const radarRow = percentileData.find(row => row.Coach_ID === coachID);
 
+  const radarColor = coachData[0]?.color || '#000';
+
   if (coachData.length === 0) {
     return (
       <div style={{ padding: '2rem' }}>
@@ -32,7 +34,9 @@ const CoachPage = ({ rawData }) => {
   }
 
   const coachName = coachData[0].Coach;
-  const nbaPlayers = coachData.filter(row => parseInt(row.Actual_NBA) === 1).length;
+  const nbaPlayers = new Set(
+    coachData.filter(row => parseInt(row.Actual_NBA) === 1).map(row => row.Name)
+  ).size;
 
   // Get the most recent non-null, non-empty Team
   const recentTeamRow = [...coachData].reverse().find(row => row.Team && row.Team.trim() !== '');
@@ -81,49 +85,57 @@ const CoachPage = ({ rawData }) => {
   }
 
   return (
-    <div style={{ padding: '2rem' }}>
+    <div style={{ padding: '3rem 5vw', fontFamily: 'Inter, sans-serif', maxWidth: '1200px', margin: '0 auto' }}>
       <div style={{ display: 'flex', alignItems: 'flex-start', gap: '2rem' }}>
         {/* Left: photo, coach name, school, player count */}
         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', flex: 1 }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '2rem', marginBottom: '2rem' }}>
             <img
               src={imageUrl}
               alt={coachName}
-              style={{ width: '120px', height: '120px', objectFit: 'cover', borderRadius: '6px' }}
+              style={{ width: '140px', height: '140px', objectFit: 'cover', borderRadius: '10px', border: '1px solid #ccc' }}
             />
             <div>
-              <h2 style={{ margin: 0 }}>{coachName}</h2>
-              <h4 style={{ margin: '0.5rem 0 0 0' }}><strong>School:</strong> {schoolName}</h4>
+              <h1 style={{ margin: 0, fontSize: '2.2rem' }}>{coachName}</h1>
+              <h3 style={{ margin: '0.5rem 0 0 0', color: '#666' }}>{schoolName}</h3>
             </div>
 
-            <div style={{ marginLeft: 'auto' }}>
-              <h3 style={{ margin: 5 }}>
-                <strong>
-                  {conferenceLevel === 'P5'
-                    ? 'Average Probability of Making it to the NBA:'
-                    : 'Average Probability of Transferring to P5 Team:'}
-                </strong>{' '}
+            <div style={{ width: '100%', textAlign: 'center', marginLeft: '1.5rem' }}>
+              <div style={{ fontSize: '1.2rem', color: '#0e1111', marginBottom: '0.25rem' }}>
+                {conferenceLevel === 'P5'
+                  ? 'Average Probability of Making it to the NBA:'
+                  : 'Average Probability of Transferring to P5 Team:'}
+              </div>
+              <div style={{ fontFamily: 'Karantina', fontSize: '7rem', lineHeight: '1' }}>
                 {(avgProbability * 100).toFixed(2)}%
-              </h3>
+              </div>
             </div>
           </div>
+          
+          <div style={{ display: 'flex', width: '100%', marginTop: '2rem', gap: '2rem', alignItems: 'flex-start' }}>
 
+            {/* Player Lists */}
+            <div style={{ flex: '1 1 20%' }}>
+              <h2 style={{ fontSize: '1.25rem', margin: '1.5rem 0 0.5rem' }}>Conference:</h2>
+              <p style={{ marginTop: '0.25rem' }}>{conference}</p>
 
-          <div style={{ marginTop: '1.5rem' }}>
-            <p style={{ marginTop: '0.25rem' }}><strong>Conference:</strong> {conference}</p>
-            <p style={{ marginTop: '0.25rem' }}><strong>Players who made the NBA:</strong> {nbaPlayers}</p>
-            <strong>{conferenceLevel === 'P5' ? 'Players Sent to NBA' : 'Players Transferred to D1'}</strong>
-            {playerNames.length === 0 ? (
-              <p style={{ margin: '0.5rem 0' }}>No players listed.</p>
-            ) : (
-              <ul style={{ paddingLeft: 0, listStyle: 'none', marginTop: '0.5rem' }}>
-                {playerNames.map((name, index) => (
-                  <li key={index}>{name}</li>
-                ))}
-              </ul>
-            )}
-          </div>
-          <strong>Notable Players Developed</strong>
+              <h2 style={{ fontSize: '1.25rem', margin: '1.5rem 0 0.5rem' }}>Players who made the NBA:</h2>
+              <p style={{ marginTop: '0.25rem' }}>{nbaPlayers}</p>
+
+              <h2 style={{ fontSize: '1.25rem', margin: '1.5rem 0 0.5rem' }}>
+                {conferenceLevel === 'P5' ? 'Players Sent to NBA' : 'Players Transferred to D1'}
+              </h2>
+              {playerNames.length === 0 ? (
+                <p style={{ margin: '0.5rem 0' }}>No players listed.</p>
+              ) : (
+                <ul style={{ paddingLeft: 0, listStyle: 'none', marginTop: '0.5rem' }}>
+                  {playerNames.map((name, index) => (
+                    <li key={index}>{name}</li>
+                  ))}
+                </ul>
+              )}
+
+              <h2 style={{ fontSize: '1.25rem', margin: '1.5rem 0 0.5rem' }}>Notable Players Developed</h2>
               {playerNames2.length === 0 ? (
                 <p style={{ margin: '0.5rem 0' }}>No players listed.</p>
               ) : (
@@ -133,17 +145,22 @@ const CoachPage = ({ rawData }) => {
                   ))}
                 </ul>
               )}
+            </div>
+            {/* Radar Chart */}
+            {radarRow && (
+              <div style={{ flex: '1 1 50%', minWidth: '1000px' }}>
+                <CoachRadarChart coachRow={radarRow} coachColor={radarColor} />
+              </div>
+            )}
+          </div>
         </div>
       </div>
+          
 
-      {radarRow && (
-        <div style={{ marginTop: '2rem' }}>
-          <CoachRadarChart coachRow={radarRow} />
-        </div>
-      )}
-
-      <div style={{ marginTop: '2rem' }}>
-        <Link to="/">← Back to Dashboard</Link>
+      <div style={{ marginTop: '3rem', textAlign: 'center' }}>
+        <Link to="/" style={{ fontSize: '1rem', color: '#007acc' }}>
+          ← Back to Dashboard
+        </Link>
       </div>
     </div>
   );

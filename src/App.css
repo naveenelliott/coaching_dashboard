@@ -56,3 +56,10 @@
   flex: 1;
   min-width: 400px;
 }
+
+@font-face {
+  font-family: 'Karantina';
+  src: url('/public/Karantina-Light.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}

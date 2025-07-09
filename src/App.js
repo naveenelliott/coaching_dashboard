@@ -16,6 +16,9 @@ function App() {
   const [minNBAEntrants, setMinNBAEntrants] = useState(0);
   const [conferenceFilter, setConferenceFilter] = useState('P5');
   const [highlightCoach, setHighlightCoach] = useState('');
+  useEffect(() => {
+    document.title = "CBB Coach Dashboard";
+  }, []);
 
   useEffect(() => {
     Papa.parse('/final_merged.csv', {
@@ -128,7 +131,7 @@ function App() {
       const metricB = conferenceFilter === 'P5' ? b.NBA_Prob_Change : b.Transfer_Prob_Change;
       return metricB - metricA;
     })
-    .slice(0, 50);
+    .slice(0, 100);
 
     const uniqueJumps = Array.from(
         new Map(topJumps.map(row => [row.Name, row])).values()
@@ -138,7 +141,9 @@ function App() {
     <Routes>
       <Route path="/" element={
         <div className="App">
-          <h2>Coach Development Metrics</h2>
+          <h1 style={{ fontSize: '2.5rem', fontWeight: 700, marginBottom: '1.5rem', textAlign: 'center', fontFamily: 'Merriweather, serif'  }}>
+            College Basketball Coach Dashboard
+          </h1>
 
           <div className="filters-container">
             <div className="filter-box">
@@ -162,14 +167,6 @@ function App() {
                 <option value="oneYears">One-Year Players</option>
                 <option value="multiYears">Multi-Year Players</option>
               </select>
-            </div>
-            <div className="filter-box">
-              <label>Min Transfer Prob Change:</label>
-              <input type="number" step="0.01" value={minTransferChange} onChange={e => setMinTransferChange(parseFloat(e.target.value) || 0)} />
-            </div>
-            <div className="filter-box">
-              <label>Min NBA Entrants:</label>
-              <input type="number" value={minNBAEntrants} onChange={e => setMinNBAEntrants(parseInt(e.target.value) || 0)} />
             </div>
             <div className="filter-box">
               <label>Highlight Coach:</label>
@@ -217,9 +214,14 @@ function App() {
             </div>
 
             <div>
-              <h3 style={{ marginTop: 0, marginBottom: '1rem' }}>
-                Top Player Jumps ({conferenceFilter === 'P5' ? 'NBA Probability' : 'Transfer to P5'})
-              </h3>
+              <h2 style={{
+                fontSize: '1.4rem',
+                fontWeight: 500,
+                margin: '1.0rem 0 1rem',
+                textAlign: 'center'
+              }}>
+                Top Player Jumps – {conferenceFilter === 'P5' ? 'NBA Probability' : 'Transfer to P5'}
+              </h2>
 
 
               <PlayerJumpTable topJumps={uniqueJumps} conferenceFilter={conferenceFilter} />

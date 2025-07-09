@@ -1,6 +1,6 @@
 import { ResponsiveRadar } from '@nivo/radar';
 
-const CoachRadarChart = ({ coachRow }) => {
+const CoachRadarChart = ({ coachRow, coachColor }) => {
   if (!coachRow) return null;
 
   const isP5 = coachRow.conference_level === 'P5';
@@ -48,8 +48,8 @@ const CoachRadarChart = ({ coachRow }) => {
             dotColor={{ from: 'color' }} // filled dots
             dotBorderWidth={2}
             dotBorderColor={{ from: 'color' }}
-            colors={{ scheme: 'nivo' }}
-            fillOpacity={0.4}
+            colors={[coachColor]}
+            fillOpacity={0.6}
             blendMode="multiply"
             animate={true}
             isInteractive={true}
