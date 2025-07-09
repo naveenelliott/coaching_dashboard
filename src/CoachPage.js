@@ -24,6 +24,50 @@ const CoachPage = ({ rawData }) => {
 
   const radarColor = coachData[0]?.color || '#000';
 
+  const [imageUrl, setImageUrl] = useState('/default_photo.jpg');
+
+  const [coachName, setCoachName] = useState('');
+
+  useEffect(() => {
+    if (coachData.length > 0) {
+      setCoachName(coachData[0].Coach);
+    }
+  }, [coachData]);
+
+  useEffect(() => {
+    const extensions = ['jpg', 'jpeg', 'png', 'webp'];
+    const formattedName = coachName?.replace(/\*/g, '').trim() || '';
+
+    const tryLoadImage = async () => {
+      for (let ext of extensions) {
+        const imgPath = `/CBB Coaches/${formattedName}.${ext}`;
+        console.log(`Trying to load image: ${imgPath}`);
+        try {
+          const res = await fetch(imgPath);
+          if (
+            res.ok &&
+            res.headers.get('Content-Type')?.startsWith('image/')
+          ) {
+            console.log(`Found image: ${imgPath}`);
+            setImageUrl(imgPath);
+            return;
+          } else {
+            console.log(`Not found: ${imgPath}`);
+          }
+        } catch (e) {
+          console.error(`Error loading image: ${imgPath}`, e);
+        }
+      }
+      console.log('No image found — using default');
+    };
+
+    if (coachName) {
+      (async () => {
+        await tryLoadImage();
+      })();
+    }
+  }, [coachName]);
+
   if (coachData.length === 0) {
     return (
       <div style={{ padding: '2rem' }}>
@@ -31,9 +75,8 @@ const CoachPage = ({ rawData }) => {
         <Link to="/">← Back to Dashboard</Link>
       </div>
     );
-  }
+  };
 
-  const coachName = coachData[0].Coach;
   const nbaPlayers = new Set(
     coachData.filter(row => parseInt(row.Actual_NBA) === 1).map(row => row.Name)
   ).size;
@@ -63,8 +106,6 @@ const CoachPage = ({ rawData }) => {
   // Get unique player names
   const playerNames = [...new Set(notablePlayers.map(row => row.Name))];
 
-  const imageUrl = `/default_photo.jpg`;
-
   let avgProbability = 0;
 
   const notablePlayersDev = coachData.filter(row =>
@@ -72,6 +113,8 @@ const CoachPage = ({ rawData }) => {
   );
 
   const playerNames2 = [...new Set(notablePlayersDev.map(row => row.Name))];
+
+  const formattedName = coachName?.replace(/\*/g, '').trim() || '';
 
 
   if (conferenceLevel === 'P5') {
@@ -93,11 +136,12 @@ const CoachPage = ({ rawData }) => {
             <img
               src={imageUrl}
               alt={coachName}
-              style={{ width: '140px', height: '140px', objectFit: 'cover', borderRadius: '10px', border: '1px solid #ccc' }}
+              onError={() => setImageUrl('/default_photo.jpg')}
+              style={{ width: '200px', height: '200px', objectFit: 'cover', borderRadius: '10px', border: '1px solid #ccc' }}
             />
             <div>
-              <h1 style={{ margin: 0, fontSize: '2.2rem' }}>{coachName}</h1>
-              <h3 style={{ margin: '0.5rem 0 0 0', color: '#666' }}>{schoolName}</h3>
+              <h1 style={{ margin: 0, fontSize: '2.2rem' }}>{formattedName}</h1>
+              <h3 style={{ margin: '0.5rem 0 0 0', color: radarColor }}>{schoolName}</h3>
             </div>
 
             <div style={{ width: '100%', textAlign: 'center', marginLeft: '1.5rem' }}>
@@ -106,7 +150,7 @@ const CoachPage = ({ rawData }) => {
                   ? 'Average Probability of Making it to the NBA:'
                   : 'Average Probability of Transferring to P5 Team:'}
               </div>
-              <div style={{ fontFamily: 'Karantina', fontSize: '7rem', lineHeight: '1' }}>
+              <div style={{ fontFamily: 'Karantina', fontSize: '7rem', lineHeight: '1', color: radarColor }}>
                 {(avgProbability * 100).toFixed(2)}%
               </div>
             </div>
