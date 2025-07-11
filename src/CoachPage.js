@@ -91,6 +91,9 @@ const CoachPage = ({ rawData }) => {
     .map(w => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase())
     .join(' ');
 
+  // School logo path
+  const schoolLogo = `/Schools/${schoolName.toLowerCase().replace(/ /g, '_')}.png`;
+
   // Get current conference level from most recent row
   const conferenceLevel = recentTeamRow?.conference_level || 'Other';
 
@@ -138,6 +141,12 @@ const CoachPage = ({ rawData }) => {
               alt={coachName}
               onError={() => setImageUrl('/default_photo.jpg')}
               style={{ width: '200px', height: '200px', objectFit: 'cover', borderRadius: '10px', border: '1px solid #ccc' }}
+            />
+            <img
+              src={schoolLogo}
+              alt={`${schoolName} logo`}
+              onError={(e) => { e.target.style.display = 'none'; }}
+              style={{ width: '80px', height: '80px', objectFit: 'contain', marginTop: '1rem' }}
             />
             <div>
               <h1 style={{ margin: 0, fontSize: '2.2rem' }}>{formattedName}</h1>
