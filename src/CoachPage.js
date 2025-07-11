@@ -92,7 +92,7 @@ const CoachPage = ({ rawData }) => {
     .join(' ');
 
   // School logo path
-  const schoolLogo = `/Schools/${schoolName.toLowerCase().replace(/ /g, '_')}.png`;
+  const schoolLogo = `/Schools/${schoolName}.png`;
 
   // Get current conference level from most recent row
   const conferenceLevel = recentTeamRow?.conference_level || 'Other';
