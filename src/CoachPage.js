@@ -130,6 +130,8 @@ const CoachPage = ({ rawData }) => {
     avgProbability = relevant.length ? total / relevant.length : 0;
   }
 
+  console.log('Radar Row:', radarRow);
+
   return (
     <div style={{ padding: '3rem 5vw', fontFamily: 'Inter, sans-serif', maxWidth: '1200px', margin: '0 auto' }}>
       <div style={{ display: 'flex', alignItems: 'flex-start', gap: '2rem' }}>
@@ -203,11 +205,42 @@ const CoachPage = ({ rawData }) => {
             {radarRow && (
               <div style={{ flex: '1 1 50%', minWidth: '1000px' }}>
                 <CoachRadarChart coachRow={radarRow} coachColor={radarColor} />
+
+                <div style={{ flex: '1 1 70%', display: 'flex', gap: '2rem' }}>
+                {/* Radar Chart Key */}
+                <div style={{
+                  flex: '1 1 35%',
+                  border: '1px solid #ccc',
+                  borderRadius: '10px',
+                  padding: '1rem 1.25rem',
+                  background: '#f9f9f9',
+                  fontSize: '0.9rem',
+                  color: '#333',
+                  maxHeight: 'fit-content'
+                }}>
+
+            
+                  <h3 style={{ marginTop: 0, fontSize: '1rem', marginBottom: '0.75rem' }}>Radar Chart Key</h3>
+                  <ul style={{ listStyle: 'none', paddingLeft: 0, margin: 0, lineHeight: 1.5 }}>
+                    <li><strong>Prob of NBA for 1st-Yrs</strong>: Percentile rank of the average chance of making the NBA for Freshman</li>
+                    <li><strong>Prob of Transfer for 1st-Yrs</strong>: Percentile rank of the average likelihood of transferring under the head coach for Freshman. Ideally you want coaches to keep the players that they recruit or send them to the NBA.</li>
+                    <li><strong>Δ in Prob of NBA</strong>: Percentile rank of the average change in probability of making the NBA under the head coach. Ideally you want a coach that on average increases their player's odds of making the NBA.</li>
+                    {radarRow?.avg_high_transfer_prob_change_multi_year !== null && (
+                      <>
+                        <li><strong>Prob of Transfer to P5 for 1st-Yrs</strong>: Percentile rank of the likelihood of transferring to a Power-5 school from a mid/low major school for freshman.</li>
+                        <li><strong>Δ in Prob of Transfer to P5</strong>: Percentile rank of the change in likelihood of transferring to a Power-5 school from a mid/low major school. For these type of coaches, you want them to be producing players and moving them on to the next level, whether that be Power 5 schools or the NBA.</li>
+                      </>
+                    )}
+                  </ul>
+                </div>
+              </div>
               </div>
             )}
           </div>
         </div>
       </div>
+
+      
           
 
       <div style={{ marginTop: '3rem', textAlign: 'center' }}>
