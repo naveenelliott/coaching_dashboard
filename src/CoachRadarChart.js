@@ -53,6 +53,9 @@ const CoachRadarChart = ({ coachRow, coachColor }) => {
             blendMode="multiply"
             animate={true}
             isInteractive={true}
+            enableDotLabel={true}
+            dotLabel="value"
+            dotLabelYOffset={-12}
             // ✅ theme config to ensure ticks + labels are visible
             theme={{
                 grid: {
@@ -85,6 +88,12 @@ const CoachRadarChart = ({ coachRow, coachColor }) => {
                     color: '#333',
                     fontSize: 13,
                 },
+                },
+                labels: {
+                  text: {
+                    fill: coachColor,  // static label color
+                    fontSize: 12,
+                  },
                 },
             }}
             />
