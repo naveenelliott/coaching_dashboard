@@ -4,7 +4,7 @@ import Papa from 'papaparse';
 import React, { useEffect, useState } from 'react';
 
 
-const CoachPage = ({ rawData }) => {
+const CoachPage = ({ rawData, teamStats }) => {
   const { coachID } = useParams();
   const [percentileData, setPercentileData] = useState([]);
 
@@ -130,6 +130,50 @@ const CoachPage = ({ rawData }) => {
     avgProbability = relevant.length ? total / relevant.length : 0;
   }
 
+  // Compute coach-level averages from teamStats
+  const coachTeamStats = teamStats.filter(
+    row => row.Team?.toLowerCase() === schoolName.toLowerCase()
+  );
+
+  const careerWinPct = coachTeamStats.length
+    ? (coachTeamStats.reduce((sum, row) => sum + (row.Win_Pct || 0), 0) / coachTeamStats.length)
+    : null;
+  const avgSRS = coachTeamStats.length
+    ? (coachTeamStats.reduce((sum, row) => sum + (row.SRS || 0), 0) / coachTeamStats.length)
+    : null;
+  const avgPace = coachTeamStats.length
+    ? (coachTeamStats.reduce((sum, row) => sum + (row.Pace || 0), 0) / coachTeamStats.length)
+    : null;
+  const avgORtg = coachTeamStats.length
+    ? (coachTeamStats.reduce((sum, row) => sum + (row.Off_Rating || 0), 0) / coachTeamStats.length)
+    : null;
+
+  // Helper function to calculate percentile rank
+  function percentileRank(value, array) {
+    if (!value && value !== 0 || !array.length) return null;
+    const sorted = array.filter(v => !isNaN(v)).sort((a, b) => a - b);
+    const rank = sorted.findIndex(v => value <= v);
+    return rank >= 0 ? (rank / sorted.length) * 100 : 100;
+  }
+
+  // Get values for percentile comparisons
+  const allWinPcts = teamStats.map(row => row.Win_Pct || 0);
+  const allSRS = teamStats.map(row => row.SRS || 0);
+  const allPaces = teamStats.map(row => row.Pace || 0);
+  const allORtgs = teamStats.map(row => row.Off_Rating || 0);
+
+  const winPctRank = percentileRank(careerWinPct, allWinPcts);
+  const srsRank = percentileRank(avgSRS, allSRS);
+  const paceRank = percentileRank(avgPace, allPaces);
+  const ortgRank = percentileRank(avgORtg, allORtgs);
+
+  // Utility to determine background color based on percentile
+  const getColor = (pct) => {
+    if (pct === null) return '#eee';
+    const hue = Math.round((pct / 100) * 120); // Green (120) to Red (0)
+    return `hsl(${hue}, 70%, 75%)`;
+  };
+
   console.log('Radar Row:', radarRow);
 
   return (
@@ -205,6 +249,34 @@ const CoachPage = ({ rawData }) => {
             {radarRow && (
               <div style={{ flex: '1 1 50%', minWidth: '1000px' }}>
                 <CoachRadarChart coachRow={radarRow} coachColor={radarColor} />
+
+                <div style={{
+                  marginTop: '2rem',
+                  padding: '1rem 1.5rem',
+                  borderRadius: '10px',
+                  border: '1px solid #ccc',
+                  background: '#fdfdfd',
+                  fontSize: '0.95rem',
+                  color: '#111',
+                  maxWidth: '600px',
+                  marginLeft: 'auto'
+                }}>
+                  <h3 style={{ marginTop: 0, marginBottom: '1rem' }}>Career Resume Summary</h3>
+                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem' }}>
+                    <div style={{ background: getColor(winPctRank), padding: '0.5rem', borderRadius: '6px' }}>
+                      <strong>Career Win %</strong>: {(careerWinPct * 100).toFixed(1)}%
+                    </div>
+                    <div style={{ background: getColor(srsRank), padding: '0.5rem', borderRadius: '6px' }}>
+                      <strong>Avg SRS</strong>: {avgSRS?.toFixed(2)}
+                    </div>
+                    <div style={{ background: getColor(paceRank), padding: '0.5rem', borderRadius: '6px' }}>
+                      <strong>Avg Pace</strong>: {avgPace?.toFixed(1)}
+                    </div>
+                    <div style={{ background: getColor(ortgRank), padding: '0.5rem', borderRadius: '6px' }}>
+                      <strong>Avg Off Rating</strong>: {avgORtg?.toFixed(1)}
+                    </div>
+                  </div>
+                </div>
 
                 <div style={{ flex: '1 1 70%', display: 'flex', gap: '2rem' }}>
                 {/* Radar Chart Key */}
