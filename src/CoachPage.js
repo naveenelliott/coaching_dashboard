@@ -2,6 +2,7 @@ import { useParams, Link } from 'react-router-dom';
 import CoachRadarChart from './CoachRadarChart';
 import Papa from 'papaparse';
 import React, { useEffect, useState } from 'react';
+import CoachResume from './CoachResume';
 
 
 const CoachPage = ({ rawData }) => {
@@ -166,6 +167,9 @@ const CoachPage = ({ rawData }) => {
               <div style={{ fontFamily: 'Karantina', fontSize: '7rem', lineHeight: '1', color: radarColor }}>
                 {(avgProbability * 100).toFixed(2)}%
               </div>
+            </div>
+            <div style={{ marginLeft: 'auto', paddingLeft: '1rem' }}>
+              <CoachResume coachID={coachID} />
             </div>
           </div>
           

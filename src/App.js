@@ -16,6 +16,7 @@ function App() {
   const [minNBAEntrants, setMinNBAEntrants] = useState(0);
   const [conferenceFilter, setConferenceFilter] = useState('P5');
   const [highlightCoach, setHighlightCoach] = useState('');
+
   useEffect(() => {
     document.title = "CBB Coach Dashboard";
   }, []);
@@ -222,7 +223,6 @@ function App() {
               }}>
                 Top Player Jumps – {conferenceFilter === 'P5' ? 'NBA Probability' : 'Transfer to P5'}
               </h2>
-
 
               <PlayerJumpTable topJumps={uniqueJumps} conferenceFilter={conferenceFilter} />
             </div>
