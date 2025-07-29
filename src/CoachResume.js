@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import Papa from 'papaparse';
 
-const CoachResume = ({ coachID }) => {
+const CoachResume = ({ coachID, conference, conferenceLevel, nbaPlayers, playerNames, playerNames2 }) => {
   const [stats, setStats] = useState({
     winPct: null,
     totalWins: null,
@@ -145,21 +145,22 @@ const CoachResume = ({ coachID }) => {
       backgroundColor: '#f9fafb'
     }}>
       <h3 style={{ 
-        margin: '0 0 0.5rem', 
+        margin: '0 0 0.25rem', 
         fontSize: '1.4rem', 
         fontWeight: 'bold',
         color: '#1f2937'
       }}>
         Coach Resume
       </h3>
-      <p style={{ 
-        margin: '0 0 1rem', 
-        fontSize: '0.9rem', 
-        color: '#6b7280',
-        fontStyle: 'italic'
+      <h4 style={{ 
+        margin: '0 0 1.5rem', 
+        fontSize: '.9rem', 
+        fontWeight: '500',
+        color: '#1f2937'
       }}>
-        Stats since 2021 (Transfer Portal Era)
-      </p>
+        <br />
+        Conference: {conference}
+      </h4>
       
       <table style={{ width: '100%', borderCollapse: 'collapse' }}>
         <tbody>
@@ -188,24 +189,6 @@ const CoachResume = ({ coachID }) => {
               }}>
                 {formatRank(rankings.winPctRank, totalCoaches)}
               </span>
-            </td>
-          </tr>
-          <tr>
-            <td style={{ 
-              padding: '0.5rem 0.75rem', 
-              borderBottom: '1px solid #e5e7eb',
-              fontSize: '0.9rem',
-              fontWeight: '500'
-            }}>
-              Wins
-            </td>
-            <td style={{ 
-              padding: '0.5rem 0.75rem', 
-              borderBottom: '1px solid #e5e7eb',
-              fontSize: '0.9rem',
-              fontWeight: 'bold'
-            }}>
-              {stats.totalWins} ({stats.totalWins + stats.totalLosses} games)
             </td>
           </tr>
           
@@ -268,7 +251,8 @@ const CoachResume = ({ coachID }) => {
             <td style={{ 
               padding: '0.5rem 0.75rem', 
               fontSize: '0.9rem',
-              fontWeight: '500'
+              fontWeight: '500',
+              borderBottom: '1px solid #e5e7eb',
             }}>
               SRS
             </td>
@@ -276,7 +260,8 @@ const CoachResume = ({ coachID }) => {
               padding: '0.5rem 0.75rem', 
               fontSize: '0.9rem',
               fontWeight: 'bold',
-              color: getRankColor(rankings.srsRank, totalCoaches)
+              color: getRankColor(rankings.srsRank, totalCoaches),
+              borderBottom: '1px solid #e5e7eb',
             }}>
               {stats.avgSRS.toFixed(1)}
               <span style={{ 
@@ -288,8 +273,82 @@ const CoachResume = ({ coachID }) => {
               </span>
             </td>
           </tr>
+
+          {/* Players who made NBA row */}
+          <tr>
+            <td style={{ 
+              padding: '0.5rem 0.75rem', 
+              fontSize: '0.9rem',
+              fontWeight: '500',
+              borderBottom: '1px solid #e5e7eb'
+            }}>
+              Players who 
+              <br />
+              made NBA
+            </td>
+            <td style={{ 
+              padding: '0.5rem 0.75rem', 
+              fontSize: '0.8rem',
+              fontWeight: '500',
+              maxWidth: '200px',
+              whiteSpace: 'normal',
+              wordWrap: 'break-word',
+              color: '#6b7280',
+              borderBottom: '1px solid #e5e7eb'
+            }}>
+            {playerNames.length === 0 ? (
+          <p>No players listed.</p>
+        ) : (
+          <p>
+            {playerNames.length === 0
+              ? 'No players listed.'
+              : playerNames.join(', ')}
+          </p>
+             )}
+            </td>
+          </tr>
+
+        {/* Notable Players Developed */}
+          <tr>
+            <td style={{ 
+              padding: '0.5rem 0.75rem', 
+              fontSize: '0.9rem',
+              fontWeight: '500'
+            }}>
+              Notable Players
+              <br />
+              Developed
+            </td>
+            <td style={{ 
+              padding: '0.5rem 0.75rem', 
+              fontSize: '0.8rem',
+              fontWeight: '500',
+              maxWidth: '500px',
+              whiteSpace: 'normal',
+              wordWrap: 'break-word',
+              color: '#6b7280',
+            }}>
+              <p>
+                {playerNames2.length === 0
+                  ? 'No players listed.'
+                  : playerNames2.join(', ')}
+              </p>
+            </td>
+          </tr>
+
         </tbody>
       </table>
+
+      <br />
+      <p style={{ 
+        margin: '0 0 1rem', 
+        fontSize: '0.9rem', 
+        color: '#6b7280',
+        fontStyle: 'italic'
+      }}>
+        Stats since 2021 (Transfer Portal Era)
+      </p>
+
     </div>
   );
 };
