@@ -207,6 +207,13 @@ const CoachPage = ({ rawData }) => {
                   </>
                 )}
               </ul>
+              
+              <h4 style={{ marginTop: '1.5rem', marginBottom: '0.5rem', textAlign: 'center' }}>Additional Statistics</h4>
+              <ul style={{ listStyle: 'none', paddingLeft: 0, lineHeight: 1.5 }}>
+                <li><strong>Offensive Rating</strong>: Points scored per 100 possessions. The formula is 100 * (PTS / Poss)</li>
+                <li><strong>Pace</strong>: An estimate of the number of possessions per team per 40 minutes. The formula is 40 * (Poss / (0.2 * Tm MP))</li>
+                <li><strong>SRS</strong>: Simple Rating System; a rating that takes into account average point differential and strength of schedule. The rating is denominated in points above/below average, where zero is average. Non-Division I games are excluded from the ratings</li>
+              </ul>
         </div>
 
       {/* Back Link */}

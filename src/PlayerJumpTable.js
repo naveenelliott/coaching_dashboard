@@ -1,5 +1,5 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 
 function PlayerJumpTable({ topJumps, conferenceFilter }) {
   const navigate = useNavigate();
@@ -32,7 +32,15 @@ function PlayerJumpTable({ topJumps, conferenceFilter }) {
                   />
                 )}
               </td>
-              <td style={tdStyle}>{row.Coach}</td>
+              <td style={tdStyle}>
+                <Link 
+                  to={`/coach/${row.Coach_ID}`}
+                  style={{ color: '#007acc', textDecoration: 'none' }}
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  {row.Coach}
+                </Link>
+              </td>
               <td style={tdStyle}>{row.season}</td>
               <td style={tdStyle}>
                 {(conferenceFilter === 'P5'

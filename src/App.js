@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import Papa from 'papaparse';
 import CoachScatterPlot from './CoachScatterPlot';
 import PlayerJumpTable from './PlayerJumpTable';
+import CoachProbabilityTable from './CoachProbabilityTable';
 import './App.css';
 import { Routes, Route } from 'react-router-dom';
 import CoachPage from './CoachPage';
@@ -16,6 +17,7 @@ function App() {
   const [minNBAEntrants, setMinNBAEntrants] = useState(0);
   const [conferenceFilter, setConferenceFilter] = useState('P5');
   const [highlightCoach, setHighlightCoach] = useState('');
+  const [coachSearch, setCoachSearch] = useState('');
 
   useEffect(() => {
     document.title = "CBB Coach Dashboard";
@@ -65,6 +67,7 @@ function App() {
         coachStats[coach] = {
           Coach: coach,
           coachID,
+          Team: row.Team,
           oneYearProbs: [],
           multiYearProbs: [],
           transferChanges: [],
@@ -99,6 +102,7 @@ function App() {
         return {
           Coach: coach.Coach,
           coachID: coach.coachID,
+          Team: coach.Team,
           Avg_NBA_Prob_OneYear: avgOneYear,
           Avg_NBA_Prob_MultiYear: avgMultiYear,
           Avg_Transfer_Prob_Change: avgTransfer,
@@ -113,6 +117,32 @@ function App() {
 
     setFilteredData(aggregated);
   }, [rawData, selectedSeason, playerType, minTransferChange, minNBAEntrants, conferenceFilter]);
+
+  const handleCoachSearch = (e) => {
+    e.preventDefault();
+    if (coachSearch.trim()) {
+      // Find the coach in the data
+      const coach = rawData.find(row => 
+        row.Coach && row.Coach.toLowerCase().includes(coachSearch.toLowerCase())
+      );
+      if (coach && coach.Coach_ID) {
+        window.location.href = `/coach/${coach.Coach_ID}`;
+      }
+    }
+  };
+
+  const handleCoachSearchChange = (e) => {
+    const value = e.target.value;
+    setCoachSearch(value);
+    
+    // Check if the selected value exactly matches a coach name
+    const coach = rawData.find(row => 
+      row.Coach && row.Coach.toLowerCase() === value.toLowerCase()
+    );
+    if (coach && coach.Coach_ID) {
+      window.location.href = `/coach/${coach.Coach_ID}`;
+    }
+  };
 
   const topJumps = [...rawData]
     .filter(row => {
@@ -137,6 +167,15 @@ function App() {
     const uniqueJumps = Array.from(
         new Map(topJumps.map(row => [row.Name, row])).values()
     );
+
+  // Sort filtered data for the coach probability table
+  const sortedCoachData = [...filteredData].sort((a, b) => {
+    if (conferenceFilter === 'P5') {
+      return b.Avg_NBA_Prob_OneYear - a.Avg_NBA_Prob_OneYear;
+    } else {
+      return b.Avg_Transfer_Prob_Change - a.Avg_Transfer_Prob_Change;
+    }
+  });
 
   return (
     <Routes>
@@ -170,61 +209,108 @@ function App() {
               </select>
             </div>
             <div className="filter-box">
-              <label>Highlight Coach:</label>
-              <input
-                list="coach-list"
-                type="text"
-                value={highlightCoach}
-                onChange={(e) => setHighlightCoach(e.target.value)}
-                placeholder="Start typing coach name"
-              />
-              <datalist id="coach-list">
-                {Array.from(new Set(rawData.map(row => row.Coach)))
-                  .sort()
-                  .map((coach, i) => (
-                    <option key={i} value={coach} />
-                  ))}
-              </datalist>
+              <label>Search Coach:</label>
+              <form onSubmit={handleCoachSearch} style={{ display: 'inline' }}>
+                <input
+                  type="text"
+                  value={coachSearch}
+                  onChange={handleCoachSearchChange}
+                  placeholder="Enter coach name..."
+                  list="coach-search-list"
+                />
+                <datalist id="coach-search-list">
+                  {Array.from(new Set(rawData.map(row => row.Coach)))
+                    .sort()
+                    .map((coach, i) => (
+                      <option key={i} value={coach} />
+                    ))}
+                </datalist>
+              </form>
             </div>
           </div>
 
           <div className="visualizations">
-            <div>
-              <CoachScatterPlot
-                data={filteredData}
-                xField="NBA_Entrants"
-                yField={playerType === 'oneYears' ? 'Avg_NBA_Prob_OneYear' : 'Avg_NBA_Prob_MultiYear'}
-                xLabel="# of NBA Entrants"
-                yLabel="Avg NBA Probability Change"
-                title="NBA Development by Coach"
-                highlightCoach={highlightCoach}
-              />
-              {conferenceFilter === 'Other' && (
-                <div style={{ marginTop: '2rem' }}>
-                  <CoachScatterPlot
-                    data={filteredData}
-                    xField="Transfer_Entrants"
-                    yField="Avg_Transfer_Prob_Change"
-                    xLabel="# of Players Transferred to P5"
-                    yLabel="Avg Transfer-to-P5 Probability"
-                    title="Transfers to P5 by Coach"
-                    highlightCoach={highlightCoach}
+            <div style={{ display: 'flex', gap: '2rem', alignItems: 'flex-start' }}>
+              {/* Left Column - Graphs */}
+              <div style={{ flex: 1 }}>
+                <div style={{ marginBottom: '1rem', textAlign: 'center' }}>
+                  <label style={{ fontSize: '1.1rem', fontWeight: '500', marginRight: '1rem' }}>
+                    Highlight Coach:
+                  </label>
+                  <input
+                    list="coach-list"
+                    type="text"
+                    value={highlightCoach}
+                    onChange={(e) => setHighlightCoach(e.target.value)}
+                    placeholder="Start typing coach name"
+                    style={{
+                      padding: '0.5rem 1rem',
+                      fontSize: '1rem',
+                      border: '1px solid #ced4da',
+                      borderRadius: '4px',
+                      width: '250px'
+                    }}
                   />
+                  <datalist id="coach-list">
+                    {Array.from(new Set(rawData.map(row => row.Coach)))
+                      .sort()
+                      .map((coach, i) => (
+                        <option key={i} value={coach} />
+                      ))}
+                  </datalist>
                 </div>
-              )}
-            </div>
+                <CoachScatterPlot
+                  data={filteredData}
+                  xField="NBA_Entrants"
+                  yField={playerType === 'oneYears' ? 'Avg_NBA_Prob_OneYear' : 'Avg_NBA_Prob_MultiYear'}
+                  xLabel="# of NBA Entrants"
+                  yLabel="Avg NBA Probability Change"
+                  title="NBA Development by Coach"
+                  highlightCoach={highlightCoach}
+                />
+                {conferenceFilter === 'Other' && (
+                  <div style={{ marginTop: '2rem' }}>
+                    <CoachScatterPlot
+                      data={filteredData}
+                      xField="Transfer_Entrants"
+                      yField="Avg_Transfer_Prob_Change"
+                      xLabel="# of Players Transferred to P5"
+                      yLabel="Avg Transfer-to-P5 Probability"
+                      title="Transfers to P5 by Coach"
+                      highlightCoach={highlightCoach}
+                    />
+                  </div>
+                )}
+              </div>
 
-            <div>
-              <h2 style={{
-                fontSize: '1.4rem',
-                fontWeight: 500,
-                margin: '1.0rem 0 1rem',
-                textAlign: 'center'
-              }}>
-                Top Player Jumps – {conferenceFilter === 'P5' ? 'NBA Probability' : 'Transfer to P5'}
-              </h2>
+              {/* Right Column - Tables */}
+              <div style={{ flex: 1 }}>
+                <div>
+                  <h2 style={{
+                    fontSize: '1.4rem',
+                    fontWeight: 500,
+                    margin: '1.0rem 0 1rem',
+                    textAlign: 'center'
+                  }}>
+                    Top Player Jumps – {conferenceFilter === 'P5' ? 'NBA Probability' : 'Transfer to P5'}
+                  </h2>
 
-              <PlayerJumpTable topJumps={uniqueJumps} conferenceFilter={conferenceFilter} />
+                  <PlayerJumpTable topJumps={uniqueJumps} conferenceFilter={conferenceFilter} />
+                </div>
+
+                <div style={{ marginTop: '3rem' }}>
+                  <h2 style={{
+                    fontSize: '1.4rem',
+                    fontWeight: 500,
+                    margin: '1.0rem 0 1rem',
+                    textAlign: 'center'
+                  }}>
+                    Top {conferenceFilter === 'P5' ? 'NBA' : 'Transfer to P5'} Probabilities by Coach
+                  </h2>
+
+                  <CoachProbabilityTable coachData={sortedCoachData} conferenceFilter={conferenceFilter} />
+                </div>
+              </div>
             </div>
           </div>
         </div>
