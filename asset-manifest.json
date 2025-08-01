@@ -1,0 +1,14 @@
+{
+  "files": {
+    "main.css": "/static/css/main.2d7bfba8.css",
+    "main.js": "/static/js/main.0d2c2e74.js",
+    "static/media/Karantina-Light.ttf": "/static/media/Karantina-Light.20ce8ef06a781aede0f7.ttf",
+    "index.html": "/index.html",
+    "main.2d7bfba8.css.map": "/static/css/main.2d7bfba8.css.map",
+    "main.0d2c2e74.js.map": "/static/js/main.0d2c2e74.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.2d7bfba8.css",
+    "static/js/main.0d2c2e74.js"
+  ]
+}
