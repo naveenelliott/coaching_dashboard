@@ -2,6 +2,16 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 
 const CoachProbabilityTable = ({ coachData, conferenceFilter }) => {
+
+  const toTitleCase = (str) => {
+    if (!str) return "";
+    return str
+      .toLowerCase()
+      .split(" ")
+      .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+      .join(" ");
+  };
+
   return (
     <div style={{ maxHeight: '400px', overflowY: 'scroll', marginTop: '2rem' }}>
       <table style={{ width: '100%', borderCollapse: 'collapse' }}>
@@ -28,12 +38,22 @@ const CoachProbabilityTable = ({ coachData, conferenceFilter }) => {
               <td style={tdStyle}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
                   <img
-                    src={`/Schools/${coach.Team}.png`}
-                    alt={`${coach.Team} logo`}
-                    onError={(e) => { e.target.style.display = 'none'; }}
+                    src={`/Schools/${toTitleCase(coach.Team)}.png`}
+                    alt={`${toTitleCase(coach.Team)} logo`}
+                    onError={(e) => {
+                      // if .png fails, try .jpg
+                      if (e.target.src.endsWith(".png")) {
+                        e.target.src = `/Schools/${toTitleCase(coach.Team)}.jpg`;
+                      }
+                      else if (e.target.src.endsWith(".jpg")) {
+                        e.target.src = `/Schools/${toTitleCase(coach.Team)}.webp`;
+                      } else {
+                        e.target.style.display = "none"; // hide if jpg also missing
+                      }
+                    }}
                     style={{ width: '20px', height: '20px', objectFit: 'contain' }}
                   />
-                  {coach.Team}
+                  {toTitleCase(coach.Team)}
                 </div>
               </td>
               <td style={tdStyle}>
