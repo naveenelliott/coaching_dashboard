@@ -12,6 +12,28 @@ const CoachProbabilityTable = ({ coachData, conferenceFilter }) => {
       .join(" ");
   };
 
+  const getTeamLogoPath = (teamName) => {
+    if (!teamName) return "";
+    
+    const teamNameLower = teamName.toLowerCase().trim();
+    
+    // Special mappings for teams with different logo file names
+    const teamMappings = {
+      'uconn': 'UCONN',
+      'north carolina': 'UNC',
+      'nc state': 'nc state',
+      'texas a&m': 'Texa A&m',
+      'st. johns': 'St. Johns',
+      'west virginia': 'West Virginia',
+      'santa clara': 'Santa Clara',
+      'oklahoma state': 'Oklahoma State',
+      'stanford': 'Stanford',
+      'tcu': 'TCU'
+    };
+    
+    return teamMappings[teamNameLower] || toTitleCase(teamName);
+  };
+
   return (
     <div style={{ maxHeight: '400px', overflowY: 'scroll', marginTop: '2rem' }}>
       <table style={{ width: '100%', borderCollapse: 'collapse' }}>
@@ -38,17 +60,20 @@ const CoachProbabilityTable = ({ coachData, conferenceFilter }) => {
               <td style={tdStyle}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
                   <img
-                    src={`/Schools/${toTitleCase(coach.Team)}.png`}
+                    src={`/Schools/${getTeamLogoPath(coach.Team)}.png`}
                     alt={`${toTitleCase(coach.Team)} logo`}
                     onError={(e) => {
-                      // if .png fails, try .jpg
+                      // if .png fails, try .jpg, then .webp, then .svg
                       if (e.target.src.endsWith(".png")) {
-                        e.target.src = `/Schools/${toTitleCase(coach.Team)}.jpg`;
+                        e.target.src = `/Schools/${getTeamLogoPath(coach.Team)}.jpg`;
                       }
                       else if (e.target.src.endsWith(".jpg")) {
-                        e.target.src = `/Schools/${toTitleCase(coach.Team)}.webp`;
+                        e.target.src = `/Schools/${getTeamLogoPath(coach.Team)}.webp`;
+                      }
+                      else if (e.target.src.endsWith(".webp")) {
+                        e.target.src = `/Schools/${getTeamLogoPath(coach.Team)}.svg`;
                       } else {
-                        e.target.style.display = "none"; // hide if jpg also missing
+                        e.target.style.display = "none"; // hide if all formats missing
                       }
                     }}
                     style={{ width: '20px', height: '20px', objectFit: 'contain' }}
@@ -58,8 +83,8 @@ const CoachProbabilityTable = ({ coachData, conferenceFilter }) => {
               </td>
               <td style={tdStyle}>
                 {conferenceFilter === 'P5' 
-                  ? `${(coach.Avg_NBA_Prob_OneYear * 100).toFixed(1)}%`
-                  : `${(coach.Avg_Transfer_Prob_Change * 100).toFixed(1)}%`
+                  ? `${(coach.Avg_NBA_Prob_All * 100).toFixed(1)}%`
+                  : `${(coach.Avg_Transfer_Prob_Change_All * 100).toFixed(1)}%`
                 }
               </td>
             </tr>

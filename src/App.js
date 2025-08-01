@@ -70,11 +70,17 @@ function App() {
           Team: row.Team,
           oneYearProbs: [],
           multiYearProbs: [],
+          allNBAProbs: [],
+          allTransferChanges: [],
           transferChanges: [],
           actualNBAEntrants: 0,
         };
+      } else if (!coachStats[coach].Team && row.Team) {
+        // Update team name if it was previously empty
+        coachStats[coach].Team = row.Team;
       }
 
+      // For scatter plot and other visualizations, filter by playerType
       if ((playerType === 'oneYears' && oneYear) || (playerType === 'multiYears' && !oneYear)) {
         if (oneYear) coachStats[coach].oneYearProbs.push(nbaProb);
         else coachStats[coach].multiYearProbs.push(nbaProb);
@@ -85,6 +91,10 @@ function App() {
         const transferred = parseInt(row.Actual_Transfer) || 0;
         coachStats[coach].transferEntrants = (coachStats[coach].transferEntrants || 0) + transferred;
       }
+
+      // For coach probability table, include all players regardless of playerType filter
+      coachStats[coach].allNBAProbs.push(nbaProb);
+      coachStats[coach].allTransferChanges.push(transferChange);
     });
 
     const aggregated = Object.values(coachStats)
@@ -95,8 +105,14 @@ function App() {
         const avgMultiYear = coach.multiYearProbs.length
           ? coach.multiYearProbs.reduce((a, b) => a + b, 0) / coach.multiYearProbs.length
           : 0;
+        const avgAllNBA = coach.allNBAProbs.length
+          ? coach.allNBAProbs.reduce((a, b) => a + b, 0) / coach.allNBAProbs.length
+          : 0;
         const avgTransfer = coach.transferChanges.length
           ? coach.transferChanges.reduce((a, b) => a + b, 0) / coach.transferChanges.length
+          : 0;
+        const avgAllTransfer = coach.allTransferChanges.length
+          ? coach.allTransferChanges.reduce((a, b) => a + b, 0) / coach.allTransferChanges.length
           : 0;
 
         return {
@@ -105,15 +121,20 @@ function App() {
           Team: coach.Team,
           Avg_NBA_Prob_OneYear: avgOneYear,
           Avg_NBA_Prob_MultiYear: avgMultiYear,
+          Avg_NBA_Prob_All: avgAllNBA,
           Avg_Transfer_Prob_Change: avgTransfer,
+          Avg_Transfer_Prob_Change_All: avgAllTransfer,
           NBA_Entrants: coach.actualNBAEntrants,
           Transfer_Entrants: coach.transferEntrants || 0,
         };
       })
-      .filter(coach =>
-        coach.Avg_Transfer_Prob_Change >= minTransferChange &&
-        coach.NBA_Entrants >= minNBAEntrants
-      );
+      .filter(coach => {
+        if (conferenceFilter === 'P5') {
+          return coach.NBA_Entrants >= minNBAEntrants;
+        } else {
+          return coach.Avg_Transfer_Prob_Change_All >= minTransferChange;
+        }
+      });
 
     setFilteredData(aggregated);
   }, [rawData, selectedSeason, playerType, minTransferChange, minNBAEntrants, conferenceFilter]);
@@ -171,9 +192,9 @@ function App() {
   // Sort filtered data for the coach probability table
   const sortedCoachData = [...filteredData].sort((a, b) => {
     if (conferenceFilter === 'P5') {
-      return b.Avg_NBA_Prob_OneYear - a.Avg_NBA_Prob_OneYear;
+      return b.Avg_NBA_Prob_All - a.Avg_NBA_Prob_All;
     } else {
-      return b.Avg_Transfer_Prob_Change - a.Avg_Transfer_Prob_Change;
+      return b.Avg_Transfer_Prob_Change_All - a.Avg_Transfer_Prob_Change_All;
     }
   });
 
