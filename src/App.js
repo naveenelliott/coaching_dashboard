@@ -24,7 +24,7 @@ function App() {
   }, []);
 
   useEffect(() => {
-    Papa.parse('/final_merged.csv', {
+    Papa.parse('public/final_merged.csv', {
       download: true,
       header: true,
       dynamicTyping: true,

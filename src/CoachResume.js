@@ -22,7 +22,7 @@ const CoachResume = ({ coachID, conference, conferenceLevel, nbaPlayers, playerN
   const [allCoachesData, setAllCoachesData] = useState([]);
 
   useEffect(() => {
-    Papa.parse('/CbbTeamStats.csv', {
+    Papa.parse('public/CbbTeamStats.csv', {
       download: true,
       header: true,
       dynamicTyping: true,
