@@ -60,18 +60,18 @@ const CoachProbabilityTable = ({ coachData, conferenceFilter }) => {
               <td style={tdStyle}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
                   <img
-                    src={`/Schools/${getTeamLogoPath(coach.Team)}.png`}
+                    src={process.env.PUBLIC_URL + `/Schools/${getTeamLogoPath(coach.Team)}.png`}
                     alt={`${toTitleCase(coach.Team)} logo`}
                     onError={(e) => {
                       // if .png fails, try .jpg, then .webp, then .svg
                       if (e.target.src.endsWith(".png")) {
-                        e.target.src = `/Schools/${getTeamLogoPath(coach.Team)}.jpg`;
+                        e.target.src = process.env.PUBLIC_URL + `/Schools/${getTeamLogoPath(coach.Team)}.jpg`;
                       }
                       else if (e.target.src.endsWith(".jpg")) {
-                        e.target.src = `/Schools/${getTeamLogoPath(coach.Team)}.webp`;
+                        e.target.src = process.env.PUBLIC_URL + `/Schools/${getTeamLogoPath(coach.Team)}.webp`;
                       }
                       else if (e.target.src.endsWith(".webp")) {
-                        e.target.src = `/Schools/${getTeamLogoPath(coach.Team)}.svg`;
+                        e.target.src = process.env.PUBLIC_URL + `/Schools/${getTeamLogoPath(coach.Team)}.svg`;
                       } else {
                         e.target.style.display = "none"; // hide if all formats missing
                       }

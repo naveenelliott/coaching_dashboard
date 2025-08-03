@@ -26,7 +26,7 @@ const CoachPage = ({ rawData }) => {
 
   const radarColor = coachData[0]?.color || '#000';
 
-  const [imageUrl, setImageUrl] = useState('/default_photo.jpg');
+  const [imageUrl, setImageUrl] = useState(process.env.PUBLIC_URL + '/default_photo.jpg');
 
   const [coachName, setCoachName] = useState('');
 
@@ -42,7 +42,7 @@ const CoachPage = ({ rawData }) => {
 
     const tryLoadImage = async () => {
       for (let ext of extensions) {
-        const imgPath = `/CBB Coaches/${formattedName}.${ext}`;
+        const imgPath = process.env.PUBLIC_URL + `/CBB Coaches/${formattedName}.${ext}`;
         console.log(`Trying to load image: ${imgPath}`);
         try {
           const res = await fetch(imgPath);
@@ -94,7 +94,7 @@ const CoachPage = ({ rawData }) => {
     .join(' ');
 
   // School logo path
-  const schoolLogo = `/Schools/${schoolName}.png`;
+  const schoolLogo = process.env.PUBLIC_URL + `/Schools/${schoolName}.png`;
 
   // Get current conference level from most recent row
   const conferenceLevel = recentTeamRow?.conference_level || 'Other';
