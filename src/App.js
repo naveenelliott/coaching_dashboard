@@ -148,7 +148,7 @@ function App() {
         row.Coach && row.Coach.toLowerCase().includes(coachSearch.toLowerCase())
       );
       if (coach && coach.Coach_ID) {
-        window.location.href = `/coach/${coach.Coach_ID}`;
+        window.location.href = `/coaching_dashboard/#/coach/${coach.Coach_ID}`;
       }
     }
   };
