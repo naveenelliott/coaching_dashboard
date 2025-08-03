@@ -2,6 +2,8 @@
   "name": "coaching_dashboard",
   "version": "0.1.0",
   "private": true,
+  "homepage": "https://github.com/naveenelliott/coaching_dashboard",
+  
   "dependencies": {
     "@nivo/core": "^0.99.0",
     "@nivo/radar": "^0.99.0",
@@ -18,8 +20,7 @@
     "react-router-dom": "^7.6.3",
     "react-scripts": "5.0.1",
     "recharts": "^3.0.2",
-    "web-vitals": "^2.1.4",
-    "homepage": "https://naveenelliott.github.io/coaching_dashboard"
+    "web-vitals": "^2.1.4"
   },
   "scripts": {
     "start": "react-scripts start",
