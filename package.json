@@ -2,8 +2,8 @@
   "name": "coaching_dashboard",
   "version": "0.1.0",
   "private": true,
-  "homepage": "https://github.com/naveenelliott/coaching_dashboard",
-  
+  "homepage": "https://naveenelliott.github.io/coaching_dashboard",
+
   "dependencies": {
     "@nivo/core": "^0.99.0",
     "@nivo/radar": "^0.99.0",
