@@ -11,7 +11,7 @@ const CoachPage = ({ rawData }) => {
   const [percentileData, setPercentileData] = useState([]);
 
   useEffect(() => {
-    Papa.parse('public/coach_percentile_rank_data.csv', {
+    Papa.parse(process.env.PUBLIC_URL + '/coach_percentile_rank_data.csv', {
       download: true,
       header: true,
       dynamicTyping: true,

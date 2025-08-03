@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+
 import Papa from 'papaparse';
 import CoachScatterPlot from './CoachScatterPlot';
 import PlayerJumpTable from './PlayerJumpTable';
@@ -24,7 +25,7 @@ function App() {
   }, []);
 
   useEffect(() => {
-    Papa.parse('public/final_merged.csv', {
+    Papa.parse(process.env.PUBLIC_URL + "/final_merged.csv", {
       download: true,
       header: true,
       dynamicTyping: true,
