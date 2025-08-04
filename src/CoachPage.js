@@ -216,13 +216,13 @@ const CoachPage = ({ rawData }) => {
             }}>
               <h3 style={{ marginTop: 0, textAlign: 'center' }}>Radar Chart Key</h3>
               <ul style={{ listStyle: 'none', paddingLeft: 0, lineHeight: 1.5 }}>
-                <li><strong>Prob of NBA for 1st-Yrs</strong>: Percentile rank of average NBA chance for freshmen</li>
-                <li><strong>Prob of Transfer for 1st-Yrs</strong>: Percentile rank of transfer likelihood for freshmen</li>
-                <li><strong>Δ in Prob of NBA</strong>: Change in NBA probability under coach</li>
+                <li><strong>Prob of NBA for 1st-Yrs</strong>: Percentile rank of average NBA chance for freshmen. Higher percentile means higher likelihood of making NBA.</li>
+                <li><strong>Prob of Transfer for 1st-Yrs</strong>: Percentile rank of transfer likelihood for freshmen. Higher percentile means less freshmen leave.</li>
+                <li><strong>Δ in Prob of NBA</strong>: Change in NBA probability under coach. Higher percentile means more likely to develop a player into NBA caliber.</li>
                 {radarRow?.avg_high_transfer_prob_change_multi_year !== null && (
                   <>
-                    <li><strong>Prob of Transfer to P5 for 1st-Yrs</strong>: Likelihood of freshman transferring to Power 5</li>
-                    <li><strong>Δ in Prob of Transfer to P5</strong>: Change in that likelihood under coach</li>
+                    <li><strong>Prob of Transfer to P5 for 1st-Yrs</strong>: Likelihood of freshman transferring to Power 5. Higher percentile means greater chance of making P5 move.</li>
+                    <li><strong>Δ in Prob of Transfer to P5</strong>: Change in that likelihood under coach. Higher percentile means more likely to develop a player into P5 level.</li>
                   </>
                 )}
               </ul>
