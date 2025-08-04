@@ -132,6 +132,15 @@ const CoachPage = ({ rawData }) => {
     avgProbability = relevant.length ? total / relevant.length : 0;
   }
 
+  const transferToP5NamesForCoach = [
+    ...new Set(
+      coachData
+        .filter(row => Number(row.Actual_Transfer) === 1)
+        .map(row => row.Name)
+        .filter(Boolean)
+    )
+  ];
+
 
   console.log('Radar Row:', radarRow);
 
@@ -177,6 +186,7 @@ const CoachPage = ({ rawData }) => {
             nbaPlayers={nbaPlayers}
             playerNames={playerNames}
             playerNames2={playerNames2}
+            transferPlayers={transferToP5NamesForCoach}
           />
         </div>
         {radarRow && (
