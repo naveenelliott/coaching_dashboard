@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import Papa from 'papaparse';
 
-const CoachResume = ({ coachID, conference, conferenceLevel, nbaPlayers, playerNames, playerNames2 }) => {
+const CoachResume = ({ coachID, conference, conferenceLevel, nbaPlayers, playerNames, playerNames2, transferPlayers = []}) => {
   const [stats, setStats] = useState({
     winPct: null,
     totalWins: null,
@@ -22,8 +22,6 @@ const CoachResume = ({ coachID, conference, conferenceLevel, nbaPlayers, playerN
   const [allCoachesData, setAllCoachesData] = useState([]);
 
   const isP5 = conferenceLevel === 'P5';
-
-  const transferPlayers = (typeof props !== 'undefined' && props.transferPlayers) || [];
   const playersLabel = isP5 ? 'Players who\nmade NBA' : 'Players who\ntransferred to P5';
   const playersList  = isP5 ? (nbaPlayers || playerNames || []) : transferPlayers;
 
