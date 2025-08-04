@@ -141,6 +141,15 @@ const CoachPage = ({ rawData }) => {
     )
   ];
 
+  const nbaPlayerNamesForCoach = [
+  ...new Set(
+    coachData
+      .filter(row => Number(row.Actual_NBA) === 1)
+      .map(row => row.Name)
+      .filter(Boolean)
+  )
+];
+
 
   console.log('Radar Row:', radarRow);
 
@@ -183,7 +192,7 @@ const CoachPage = ({ rawData }) => {
             coachID={coachID}
             conference={conference}
             conferenceLevel={conferenceLevel}
-            nbaPlayers={nbaPlayers}
+            nbaPlayers={nbaPlayerNamesForCoach}
             playerNames={playerNames}
             playerNames2={playerNames2}
             transferPlayers={transferToP5NamesForCoach}
