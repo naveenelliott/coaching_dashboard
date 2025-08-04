@@ -9,6 +9,7 @@ import { Routes, Route, useNavigate} from 'react-router-dom';
 import CoachPage from './CoachPage';
 
 function App() {
+  const navigate = useNavigate();
   const [rawData, setRawData] = useState([]);
   const [filteredData, setFilteredData] = useState([]);
   const [seasonOptions, setSeasonOptions] = useState([]);
