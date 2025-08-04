@@ -21,6 +21,12 @@ const CoachResume = ({ coachID, conference, conferenceLevel, nbaPlayers, playerN
   
   const [allCoachesData, setAllCoachesData] = useState([]);
 
+  const isP5 = conferenceLevel === 'P5';
+
+  const transferPlayers = (typeof props !== 'undefined' && props.transferPlayers) || [];
+  const playersLabel = isP5 ? 'Players who\nmade NBA' : 'Players who\ntransferred to P5';
+  const playersList  = isP5 ? (nbaPlayers || playerNames || []) : transferPlayers;
+
   useEffect(() => {
     Papa.parse(process.env.PUBLIC_URL + '/CbbTeamStats.csv', {
       download: true,
@@ -276,18 +282,18 @@ const CoachResume = ({ coachID, conference, conferenceLevel, nbaPlayers, playerN
 
           {/* Players who made NBA row */}
           <tr>
-            <td style={{ 
-              padding: '0.5rem 0.75rem', 
+            <td style={{
+              padding: '0.5rem 0.75rem',
               fontSize: '0.9rem',
               fontWeight: '500',
               borderBottom: '1px solid #e5e7eb'
             }}>
-              Players who 
-              <br />
-              made NBA
+              {playersLabel.split('\n').map((line, i) =>
+                i ? <><br key={i} />{line}</> : <span key={i}>{line}</span>
+              )}
             </td>
-            <td style={{ 
-              padding: '0.5rem 0.75rem', 
+            <td style={{
+              padding: '0.5rem 0.75rem',
               fontSize: '0.8rem',
               fontWeight: '500',
               maxWidth: '200px',
@@ -296,15 +302,7 @@ const CoachResume = ({ coachID, conference, conferenceLevel, nbaPlayers, playerN
               color: '#6b7280',
               borderBottom: '1px solid #e5e7eb'
             }}>
-            {playerNames.length === 0 ? (
-          <p>No players listed.</p>
-        ) : (
-          <p>
-            {playerNames.length === 0
-              ? 'No players listed.'
-              : playerNames.join(', ')}
-          </p>
-             )}
+              {playersList && playersList.length ? playersList.join(', ') : 'No players listed.'}
             </td>
           </tr>
 
