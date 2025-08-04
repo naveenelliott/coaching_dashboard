@@ -5,7 +5,7 @@ import CoachScatterPlot from './CoachScatterPlot';
 import PlayerJumpTable from './PlayerJumpTable';
 import CoachProbabilityTable from './CoachProbabilityTable';
 import './App.css';
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route, useNavigate} from 'react-router-dom';
 import CoachPage from './CoachPage';
 
 function App() {
@@ -142,15 +142,12 @@ function App() {
 
   const handleCoachSearch = (e) => {
     e.preventDefault();
-    if (coachSearch.trim()) {
-      // Find the coach in the data
-      const coach = rawData.find(row => 
-        row.Coach && row.Coach.toLowerCase().includes(coachSearch.toLowerCase())
-      );
-      if (coach && coach.Coach_ID) {
-        window.location.href = `/coaching_dashboard/#/coach/${coach.Coach_ID}`;
-      }
-    }
+    if (!coachSearch.trim()) return;
+
+    const coach = rawData.find(row =>
+      row.Coach && row.Coach.toLowerCase().includes(coachSearch.toLowerCase())
+    );
+    if (coach?.Coach_ID) navigate(`/coach/${coach.Coach_ID}`);
   };
 
   const handleCoachSearchChange = (e) => {
@@ -161,9 +158,7 @@ function App() {
     const coach = rawData.find(row => 
       row.Coach && row.Coach.toLowerCase() === value.toLowerCase()
     );
-    if (coach && coach.Coach_ID) {
-      window.location.href = `/coaching_dashboard/#/coach/${coach.Coach_ID}`;
-    }
+    if (coach?.Coach_ID) navigate(`/coach/${coach.Coach_ID}`);
   };
 
   const topJumps = [...rawData]
