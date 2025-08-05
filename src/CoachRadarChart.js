@@ -42,7 +42,7 @@ const CoachRadarChart = ({ coachRow, coachColor }) => {
             borderColor={{ from: 'color' }}
             gridLevels={5} // number of rings
             gridShape="circular"
-            gridLabelOffset={30}
+            gridLabelOffset={15}
             enableDots={true}
             dotSize={10}
             dotColor={{ from: 'color' }} // filled dots
