@@ -186,7 +186,14 @@ const CoachPage = ({ rawData }) => {
       </div>
 
       {/* Resume + Radar Chart Side by Side */}
-      <div style={{ display: 'flex', alignItems: 'flex-start', gap: '3rem' }}>
+      <div style={{
+        display: 'flex',
+        flexDirection: window.innerWidth < 768 ? 'column' : 'row',
+        alignItems: window.innerWidth < 768 ? 'center' : 'flex-start',
+        justifyContent: 'center',
+        gap: '2rem',
+        width: '100%',
+      }}>
         <div style={{ flex: 0.1 }}>
           <CoachResume
             coachID={coachID}
