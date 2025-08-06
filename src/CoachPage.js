@@ -186,16 +186,8 @@ const CoachPage = ({ rawData }) => {
       </div>
 
       {/* Resume + Radar Chart Side by Side */}
-      <div
-        style={{
-          display: 'flex',
-          flexDirection: window.innerWidth < 768 ? 'column' : 'row',
-          alignItems: 'flex-start',
-          gap: '3rem',
-          overflow: 'visible'
-        }}
-      >
-        <div style={{ flex: 1, minWidth: '250px', maxWidth: '300px' }}>
+      <div style={{ display: 'flex', alignItems: 'flex-start', gap: '3rem' }}>
+        <div style={{ flex: 0.1 }}>
           <CoachResume
             coachID={coachID}
             conference={conference}
@@ -207,7 +199,7 @@ const CoachPage = ({ rawData }) => {
           />
         </div>
         {radarRow && (
-          <div style={{ flex: 0.9, overflow: 'visible', padding: '1rem' }}>
+          <div style={{ flex: 0.9 }}>
             <CoachRadarChart coachRow={radarRow} coachColor={radarColor} />
           </div>
         )}
