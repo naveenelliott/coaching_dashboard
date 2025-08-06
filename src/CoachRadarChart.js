@@ -36,7 +36,7 @@ const CoachRadarChart = ({ coachRow, coachColor }) => {
             keys={['Coach']}
             indexBy="metric"
             maxValue={100}
-            margin={{ top: 40, right: 60, bottom: 40, left: 60 }}
+            margin={{ top: 50, right: 100, bottom: 50, left: 100 }}
             curve="linearClosed"
             borderWidth={2}
             borderColor={{ from: 'color' }}
@@ -77,8 +77,8 @@ const CoachRadarChart = ({ coachRow, coachColor }) => {
                     strokeWidth: 1,
                     },
                     text: {
-                    fontSize: 12,
-                    fill: '#333',
+                      fontSize: window.innerWidth < 600 ? 10 : 12,
+                      fill: '#333',
                     },
                 },
                 },
@@ -89,12 +89,12 @@ const CoachRadarChart = ({ coachRow, coachColor }) => {
                     fontSize: 13,
                 },
                 },
-                labels: {
-                  text: {
-                    fill: coachColor,  // static label color
-                    fontSize: 12,
+                  labels: {
+                    text: {
+                      fill: coachColor,
+                      fontSize: window.innerWidth < 600 ? 10 : 12,
+                    },
                   },
-                },
             }}
             />
     </div>

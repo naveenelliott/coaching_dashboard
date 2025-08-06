@@ -207,7 +207,7 @@ const CoachPage = ({ rawData }) => {
           />
         </div>
         {radarRow && (
-          <div style={{ flex: 0.9 }}>
+          <div style={{ flex: 0.9, overflow: 'visible', padding: '1rem' }}>
             <CoachRadarChart coachRow={radarRow} coachColor={radarColor} />
           </div>
         )}
