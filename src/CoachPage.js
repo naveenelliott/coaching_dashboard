@@ -3,12 +3,16 @@ import CoachRadarChart from './CoachRadarChart';
 import Papa from 'papaparse';
 import React, { useEffect, useState } from 'react';
 import CoachResume from './CoachResume';
+import useWindowWidth from './useWindowWidth'; // adjust path if needed
 
 
 const CoachPage = ({ rawData }) => {
   const { coachID } = useParams();
 
   const [percentileData, setPercentileData] = useState([]);
+
+  const width = useWindowWidth();
+  const isMobile = width < 768;
 
   useEffect(() => {
     Papa.parse(process.env.PUBLIC_URL + '/coach_percentile_rank_data.csv', {
@@ -186,7 +190,14 @@ const CoachPage = ({ rawData }) => {
       </div>
 
       {/* Resume + Radar Chart Side by Side */}
-      <div style={{ display: 'flex', alignItems: 'flex-start', gap: '3rem' }}>
+      <div style={{
+        display: 'flex',
+        flexDirection: isMobile ? 'column' : 'row',
+        alignItems: isMobile ? 'center' : 'flex-start',
+        justifyContent: 'center',
+        gap: '2rem',
+        width: '100%',
+      }}>
         <div style={{ flex: 0.1 }}>
           <CoachResume
             coachID={coachID}
