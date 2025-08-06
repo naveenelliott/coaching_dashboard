@@ -222,7 +222,7 @@ function App() {
             <div className="filter-box">
               <label>Player Type:</label>
               <select value={playerType} onChange={e => setPlayerType(e.target.value)}>
-                <option value="oneYears">One-Year Players</option>
+                <option value="oneYears">Freshmen</option>
                 <option value="multiYears">Multi-Year Players</option>
               </select>
             </div>
