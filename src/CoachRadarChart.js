@@ -30,13 +30,21 @@ const CoachRadarChart = ({ coachRow, coachColor }) => {
   const data = rawData.map(d => ({ metric: d.metric, Coach: d.value }));
 
   return (
-    <div style={{ width: '100%', height: 'min(80vw, 400px)', padding: '1rem', overflow: 'visible', boxSizing: 'border-box' }}>
+    <div style={{
+      width: '100%',
+      maxWidth: '450px',
+      height: '450px',
+      margin: '0 auto',
+      overflow: 'visible',
+      padding: '1rem',
+      boxSizing: 'border-box',
+  }}>
         <ResponsiveRadar
             data={data}
             keys={['Coach']}
             indexBy="metric"
             maxValue={100}
-            margin={{ top: 50, right: 100, bottom: 50, left: 100 }}
+            margin={{ top: 50, right: 60, bottom: 50, left: 60 }}
             curve="linearClosed"
             borderWidth={2}
             borderColor={{ from: 'color' }}

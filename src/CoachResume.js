@@ -142,7 +142,9 @@ const CoachResume = ({ coachID, conference, conferenceLevel, nbaPlayers, playerN
   return (
     <div style={{ 
       textAlign: 'left', 
-      minWidth: '280px',
+      minWidth: '260px',
+      maxWidth: '350px',
+      flex: '1 1 300px',
       border: '1px solid #e5e7eb',
       borderRadius: '8px',
       padding: '1rem',
