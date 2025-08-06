@@ -1,14 +1,14 @@
 {
   "files": {
     "main.css": "/coaching_dashboard/static/css/main.e071e491.css",
-    "main.js": "/coaching_dashboard/static/js/main.6ed0a13b.js",
+    "main.js": "/coaching_dashboard/static/js/main.c63f2c69.js",
     "static/media/Karantina-Light.ttf": "/coaching_dashboard/static/media/Karantina-Light.20ce8ef06a781aede0f7.ttf",
     "index.html": "/coaching_dashboard/index.html",
     "main.e071e491.css.map": "/coaching_dashboard/static/css/main.e071e491.css.map",
-    "main.6ed0a13b.js.map": "/coaching_dashboard/static/js/main.6ed0a13b.js.map"
+    "main.c63f2c69.js.map": "/coaching_dashboard/static/js/main.c63f2c69.js.map"
   },
   "entrypoints": [
     "static/css/main.e071e491.css",
-    "static/js/main.6ed0a13b.js"
+    "static/js/main.c63f2c69.js"
   ]
 }
