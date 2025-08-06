@@ -84,7 +84,7 @@ const CoachProbabilityTable = ({ coachData, conferenceFilter }) => {
               <td style={tdStyle}>
                 {conferenceFilter === 'P5' 
                   ? `${(coach.Avg_NBA_Prob_All * 100).toFixed(1)}%`
-                  : `${(coach.Avg_Transfer_Prob_Change_All * 100).toFixed(1)}%`
+                  : `${(coach.Avg_High_Transfer_All * 100).toFixed(1)}%`
                 }
               </td>
             </tr>

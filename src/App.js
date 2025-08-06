@@ -62,6 +62,7 @@ function App() {
       const coachID = row.Coach_ID;
       const nbaProb = parseFloat(row.NBA_Probability) || 0;
       const transferChange = parseFloat(row.Transfer_Prob_Change) || 0;
+      const highTransfer = parseFloat(row.High_Transfer) || 0;
       const actualNBA = parseInt(row.Actual_NBA) || 0;
       const oneYear = parseInt(row.oneYears) === 1;
 
@@ -74,6 +75,7 @@ function App() {
           multiYearProbs: [],
           allNBAProbs: [],
           allTransferChanges: [],
+          allHighTransfers: [],
           transferChanges: [],
           actualNBAEntrants: 0,
         };
@@ -97,6 +99,7 @@ function App() {
       // For coach probability table, include all players regardless of playerType filter
       coachStats[coach].allNBAProbs.push(nbaProb);
       coachStats[coach].allTransferChanges.push(transferChange);
+      coachStats[coach].allHighTransfers.push(highTransfer);
     });
 
     const aggregated = Object.values(coachStats)
@@ -116,6 +119,9 @@ function App() {
         const avgAllTransfer = coach.allTransferChanges.length
           ? coach.allTransferChanges.reduce((a, b) => a + b, 0) / coach.allTransferChanges.length
           : 0;
+        const avgAllHighTransfer = coach.allHighTransfers.length
+          ? coach.allHighTransfers.reduce((a, b) => a + b, 0) / coach.allHighTransfers.length
+          : 0;
 
         return {
           Coach: coach.Coach,
@@ -126,6 +132,7 @@ function App() {
           Avg_NBA_Prob_All: avgAllNBA,
           Avg_Transfer_Prob_Change: avgTransfer,
           Avg_Transfer_Prob_Change_All: avgAllTransfer,
+          Avg_High_Transfer_All: avgAllHighTransfer,
           NBA_Entrants: coach.actualNBAEntrants,
           Transfer_Entrants: coach.transferEntrants || 0,
         };
@@ -134,7 +141,7 @@ function App() {
         if (conferenceFilter === 'P5') {
           return coach.NBA_Entrants >= minNBAEntrants;
         } else {
-          return coach.Avg_Transfer_Prob_Change_All >= minTransferChange;
+          return coach.Avg_High_Transfer_All >= minTransferChange;
         }
       });
 
@@ -191,7 +198,7 @@ function App() {
     if (conferenceFilter === 'P5') {
       return b.Avg_NBA_Prob_All - a.Avg_NBA_Prob_All;
     } else {
-      return b.Avg_Transfer_Prob_Change_All - a.Avg_Transfer_Prob_Change_All;
+      return b.Avg_High_Transfer_All - a.Avg_High_Transfer_All;
     }
   });
 
@@ -291,7 +298,7 @@ function App() {
                     <CoachScatterPlot
                       data={filteredData}
                       xField="Transfer_Entrants"
-                      yField="Avg_Transfer_Prob_Change"
+                      yField="Avg_High_Transfer_All"
                       xLabel="# of Players Transferred to P5"
                       yLabel="Avg Transfer-to-P5 Probability"
                       title="Transfers to P5 by Coach"
