@@ -30,7 +30,7 @@ const CoachRadarChart = ({ coachRow, coachColor }) => {
   const data = rawData.map(d => ({ metric: d.metric, Coach: d.value }));
 
   return (
-    <div style={{ height: '400px', maxWidth: '100%', marginTop: '1rem' }}>
+    <div style={{ width: '100%', height: 'min(80vw, 400px)', marginTop: '1rem', overflow: 'visible' }}>
         <ResponsiveRadar
             data={data}
             keys={['Coach']}
@@ -42,7 +42,7 @@ const CoachRadarChart = ({ coachRow, coachColor }) => {
             borderColor={{ from: 'color' }}
             gridLevels={5} // number of rings
             gridShape="circular"
-            gridLabelOffset={15}
+            gridLabelOffset={30}
             enableDots={true}
             dotSize={10}
             dotColor={{ from: 'color' }} // filled dots
