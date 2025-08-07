@@ -114,20 +114,17 @@ const CoachRadarChart = ({ coachRow, coachColor = '#4F46E5' }) => {
     style={{
       width: '100%',
       maxWidth: 650,
-      margin: '1rem auto',
-      padding: '1rem',
+      margin: '0rem auto',
+      padding: '0.25rem',
       border: '1px solid #e5e7eb',
       borderRadius: '0.75rem',
       background: '#ffffff',
       boxShadow: '0 4px 12px rgba(0,0,0,0.03)',
       fontFamily: 'sans-serif',
       height: 'clamp(280px, 50vw, 400px)', // ✅ responsive height
-      maxHeight: 650,
+      minHeight: 280,
     }}
   >
-      <h2 style={{ textAlign: 'center', marginBottom: 5 }}>
-        {coachRow.Coach}
-      </h2>
       <Radar data={data} options={options} />
     </div>
   );
