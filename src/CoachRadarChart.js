@@ -124,7 +124,7 @@ const CoachRadarChart = ({ coachRow, coachColor = '#4F46E5' }) => {
         height: '400px',
       }}
     >
-      <h2 style={{ textAlign: 'center', marginBottom: 8 }}>
+      <h2 style={{ textAlign: 'center', marginBottom: 5 }}>
         {coachRow.Coach}
       </h2>
       <Radar data={data} options={options} />

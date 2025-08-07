@@ -188,11 +188,11 @@ const CoachPage = ({ rawData }) => {
       <div style={{
         display: 'flex',
         alignItems: 'flex-start',
-        justifyContent: 'center',
-        gap: '2rem',
+        justifyContent: 'left',
+        gap: '1rem',
         width: '100%',
       }}>
-        <div style={{ flex: 0.1 }}>
+        <div style={{ flex: 0.3 }}>
           <CoachResume
             coachID={coachID}
             conference={conference}
@@ -204,7 +204,7 @@ const CoachPage = ({ rawData }) => {
           />
         </div>
         {radarRow && (
-          <div style={{ flex: 0.9 }}>
+          <div style={{ flex: 0.7 }}>
             <CoachRadarChart coachRow={radarRow} coachColor={radarColor} />
           </div>
         )}
