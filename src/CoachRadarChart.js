@@ -103,7 +103,7 @@ const CoachRadarChart = ({ coachRow, coachColor = '#4F46E5' }) => {
       },
       tooltip: {
         callbacks: {
-          label: (context) => `${context.label}: ${context.raw}`,
+          label: (context) => `${context.raw}`,
         },
       },
     },
