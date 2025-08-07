@@ -213,16 +213,18 @@ const CoachPage = ({ rawData }) => {
       <div   
         style={{
           marginTop: '1rem',
-          marginLeft: 'auto',
-          marginRight: 'auto',
           width: '100%',
           maxWidth: '800px',
+          padding: '1rem',
           border: '1px solid #ccc',
           borderRadius: '10px',
-          padding: '1rem',
           background: '#f9f9f9',
           fontSize: '0.9rem',
           color: '#333',
+          textAlign: 'left',       // Ensure left text
+          alignSelf: 'center',     // If inside flex
+          marginLeft: 'auto',
+          marginRight: 'auto',
         }}>
               <h3 style={{ marginTop: 0, textAlign: 'center' }}>Radar Chart Key</h3>
               <ul style={{ listStyle: 'none', paddingLeft: 0, lineHeight: 1.5 }}>
