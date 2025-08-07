@@ -122,7 +122,7 @@ const CoachRadarChart = ({ coachRow, coachColor = '#4F46E5' }) => {
       boxShadow: '0 4px 12px rgba(0,0,0,0.03)',
       fontFamily: 'sans-serif',
       height: 'clamp(280px, 50vw, 400px)', // ✅ responsive height
-      minHeight: 280,
+      maxHeight: 650,
     }}
   >
       <h2 style={{ textAlign: 'center', marginBottom: 5 }}>
