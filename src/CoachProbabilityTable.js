@@ -19,10 +19,8 @@ const CoachProbabilityTable = ({ coachData, conferenceFilter }) => {
     
     // Special mappings for teams with different logo file names
     const teamMappings = {
-      'uconn': 'UCONN',
       'north carolina': 'UNC',
       'nc state': 'nc state',
-      'texas a&m': 'Texa A&m',
       'st. johns': 'St. Johns',
       'west virginia': 'West Virginia',
       'santa clara': 'Santa Clara',
