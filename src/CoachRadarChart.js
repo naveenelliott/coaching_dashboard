@@ -113,7 +113,7 @@ const CoachRadarChart = ({ coachRow, coachColor = '#4F46E5' }) => {
     <div
     style={{
       width: '100%',
-      maxWidth: 'min(100%, 700px)',
+      maxWidth: 700,
       margin: '1rem auto',
       padding: '1rem',
       border: '1px solid #e5e7eb',
