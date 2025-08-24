@@ -26,7 +26,7 @@ const CoachResume = ({ coachID, conference, conferenceLevel, nbaPlayers, playerN
   const playersList  = isP5 ? (nbaPlayers || playerNames || []) : transferPlayers;
 
   useEffect(() => {
-    Papa.parse(process.env.PUBLIC_URL + '/CbbTeamStats.csv', {
+    Papa.parse(process.env.PUBLIC_URL + '/CbbTeamStatsFinal.csv', {
       download: true,
       header: true,
       dynamicTyping: true,
