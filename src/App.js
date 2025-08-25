@@ -31,7 +31,8 @@ function App() {
       header: true,
       dynamicTyping: true,
       complete: (results) => {
-        const rawRows = results.data.filter(row => row.Coach && !isNaN(row.NBA_Prob_Change));
+        const rawRows = results.data
+          .filter(row => row.Coach && !isNaN(row.NBA_Prob_Change))
         const teamToConference = {};
         rawRows.forEach(row => {
           if (row.teamId && row.conference_level && !teamToConference[row.teamId]) {
@@ -54,6 +55,12 @@ function App() {
     if (selectedSeason !== 'All') {
       filtered = filtered.filter(row => String(row.season) === String(selectedSeason));
     }
+
+    // NEW: when looking at transfer metrics, ignore 2024 entirely
+    if (conferenceFilter === 'Other') {
+      filtered = filtered.filter(row => String(row.season) !== '2024');
+    }
+
     filtered = filtered.filter(row => row.conference_level === conferenceFilter);
 
     const coachStats = {};
@@ -65,6 +72,7 @@ function App() {
       const highTransfer = parseFloat(row.High_Transfer) || 0;
       const actualNBA = parseInt(row.Actual_NBA) || 0;
       const oneYear = parseInt(row.oneYears) === 1;
+      
 
       if (!coachStats[coach]) {
         coachStats[coach] = {
@@ -177,6 +185,8 @@ function App() {
       const matchesSeason = selectedSeason === 'All' || String(row.season) === String(selectedSeason);
 
       if (!matchesPlayerType || !matchesConference || !matchesSeason) return false;
+
+      if (conferenceFilter === 'Other' && String(row.season) === "2024") return false; // <--- NEW
 
       return conferenceFilter === 'P5'
         ? !isNaN(row.NBA_Prob_Change)

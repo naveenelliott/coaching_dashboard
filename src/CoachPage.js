@@ -8,6 +8,8 @@ import CoachResume from './CoachResume';
 const CoachPage = ({ rawData }) => {
   const { coachID } = useParams();
 
+  
+
   const [percentileData, setPercentileData] = useState([]);
   useEffect(() => {
     Papa.parse(process.env.PUBLIC_URL + '/coach_percentile_rank_data.csv', {
@@ -22,6 +24,8 @@ const CoachPage = ({ rawData }) => {
 
   const coachData = rawData.filter(row => row.Coach_ID === coachID);
   const radarRow = percentileData.find(row => row.Coach_ID === coachID);
+
+  const is2024 = (radarRow) => String(radarRow.season) === '2024';
 
   const radarColor = coachData[0]?.color || '#000';
 
